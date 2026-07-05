@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEX OS · Tu identidad gamer</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>/* ============================================================
+   VEX OS — shared.css
+   Estilos compartidos para páginas fuera del iPhone
+============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;}
+*::-webkit-scrollbar{display:none;}
+
+:root{
+  --bg:#090909;
+  --s1:#111116;
+  --s2:#18181f;
+  --line:#24242b;
+  --line2:#2e2e38;
+  --ink:#F2F0EB;
+  --muted:#6a6a72;
+  --muted2:#3e3e47;
+  --accent:#D9D4C7;
+  --green:#3d9970;
+  --yellow:#c8a84b;
+  --red:#c0392b;
+  --nav-h:64px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Geist',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ---- Partículas ---- */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.speck{
+  position:absolute;bottom:-4px;width:1.5px;height:1.5px;border-radius:50%;
+  background:rgba(242,240,235,0.15);animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:1;}90%{opacity:1;}
+  100%{transform:translateY(-110vh) translateX(var(--dx,20px));opacity:0;}
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(9,9,9,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;z-index:100;
+}
+.nav-logo{
+  font-size:18px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink);text-decoration:none;
+}
+.nav-links{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-links a{
+  font-size:12px;font-weight:500;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;transition:.2s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--ink);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+.nav-cta{
+  display:flex;align-items:center;gap:10px;
+}
+.btn-nav-ghost{
+  padding:8px 18px;border:1px solid var(--line);border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;transition:.2s;letter-spacing:.06em;
+  background:transparent;cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-ghost:hover{border-color:var(--line2);color:var(--ink);}
+.btn-nav-solid{
+  padding:8px 18px;background:var(--accent);border:none;border-radius:10px;
+  font-size:12px;font-weight:700;color:var(--bg);
+  text-decoration:none;transition:.15s;letter-spacing:.06em;
+  cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-solid:hover{opacity:.9;}
+
+/* Mobile nav toggle */
+.nav-mobile-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  color:var(--muted);padding:4px;
+}
+@media(max-width:700px){
+  .navbar{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-mobile-toggle{display:block;}
+}
+
+/* ============================================================
+   PAGE WRAPPER
+============================================================ */
+.page{
+  padding-top:var(--nav-h);
+  min-height:100vh;
+  position:relative;z-index:1;
+}
+
+/* ============================================================
+   COMMON SECTIONS
+============================================================ */
+.section{
+  max-width:1100px;
+  margin:0 auto;
+  padding:80px 40px;
+}
+@media(max-width:700px){.section{padding:60px 20px;}}
+
+.section-label{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.section-title{
+  font-size:clamp(28px,5vw,48px);font-weight:800;
+  letter-spacing:-.02em;line-height:1.15;color:var(--ink);
+  margin-bottom:14px;
+}
+.section-sub{
+  font-size:16px;color:var(--muted);line-height:1.7;
+  max-width:560px;
+}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--line);margin:0;}
+
+/* Cards */
+.card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+}
+.card:hover{border-color:var(--line2);}
+
+/* ============================================================
+   BUTTONS (full-page)
+============================================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:12px;
+  font-size:13px;font-weight:700;letter-spacing:.08em;
+  font-family:'Geist',sans-serif;cursor:pointer;
+  text-decoration:none;transition:.15s;border:none;
+}
+.btn-primary{background:var(--accent);color:var(--bg);}
+.btn-primary:hover{opacity:.9;}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--line2);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer{
+  border-top:1px solid var(--line);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+  position:relative;z-index:1;
+}
+.footer-logo{font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:.2s;}
+.footer-links a:hover{color:var(--ink);}
+.footer-copy{font-size:10px;color:var(--muted2);letter-spacing:.06em;}
+@media(max-width:600px){.footer{padding:24px 20px;flex-direction:column;text-align:center;}}
+
+/* ============================================================
+   FORM INPUTS (login, etc)
+============================================================ */
+.form-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:20px;padding:32px;width:100%;max-width:420px;
+}
+.form-field{margin-bottom:16px;}
+.form-field label{
+  display:block;font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:7px;
+}
+.form-field input,.form-field select{
+  width:100%;background:var(--s2);border:1px solid var(--line);
+  border-radius:10px;padding:13px 16px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--line2);}
+.form-tabs{
+  display:flex;background:var(--s2);border:1px solid var(--line);
+  border-radius:12px;padding:4px;margin-bottom:24px;gap:4px;
+}
+.form-tab{
+  flex:1;padding:9px;border:none;background:transparent;
+  font-family:'Geist',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;color:var(--muted);cursor:pointer;
+  border-radius:9px;transition:.2s;
+}
+.form-tab.active{background:var(--s1);color:var(--ink);border:1px solid var(--line);}
+.form-error{
+  font-size:11px;color:var(--red);display:none;
+  padding:8px 12px;background:rgba(192,57,43,.08);
+  border:1px solid rgba(192,57,43,.25);border-radius:8px;margin-bottom:12px;
+}
+.form-error.show{display:block;}
+.form-note{
+  font-size:10px;color:var(--muted);line-height:1.6;
+  margin-top:16px;padding:12px;background:var(--s2);
+  border:1px solid var(--line);border-radius:10px;
+}
+.form-note b{color:var(--muted2);}
+
+/* ============================================================
+   DASHBOARD LAYOUT
+============================================================ */
+.app-layout{
+  display:flex;min-height:calc(100vh - var(--nav-h));
+  padding-top:var(--nav-h);
+}
+.sidebar{
+  width:220px;flex-shrink:0;
+  border-right:1px solid var(--line);
+  padding:24px 16px;
+  position:fixed;top:var(--nav-h);left:0;bottom:0;
+  overflow-y:auto;background:var(--bg);z-index:40;
+}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px;}
+.sidebar-link{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:.15s;cursor:pointer;border:none;background:none;width:100%;
+  font-family:'Geist',sans-serif;
+}
+.sidebar-link:hover{background:var(--s1);color:var(--ink);}
+.sidebar-link.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.sidebar-link svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.sidebar-link .badge-count{
+  margin-left:auto;font-size:9px;background:var(--accent);
+  color:var(--bg);border-radius:20px;padding:2px 7px;font-weight:700;
+}
+.main-content{
+  margin-left:220px;flex:1;padding:32px;
+  max-width:calc(100vw - 220px);
+}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main-content{margin-left:0;max-width:100%;padding:20px;}
+}
+
+/* ============================================================
+   PROFILE CARDS
+============================================================ */
+.profile-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;transition:.2s;cursor:pointer;
+}
+.profile-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.pc-banner{height:60px;background:linear-gradient(135deg,var(--s2),var(--line));position:relative;}
+.pc-av{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--bg);
+  position:absolute;bottom:-26px;left:16px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
+}
+.pc-av img{width:100%;height:100%;object-fit:cover;}
+.pc-body{padding:34px 16px 16px;}
+.pc-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;}
+.pc-handle{font-size:11px;color:var(--muted);margin-top:2px;}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0;}
+.pc-tag{font-size:9px;padding:3px 8px;border-radius:20px;background:var(--s2);border:1px solid var(--line);color:var(--muted);}
+.pc-games{display:flex;gap:4px;margin-top:8px;}
+.pc-game{width:28px;height:28px;border-radius:8px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pc-footer{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.pc-compat{font-size:12px;font-weight:700;color:var(--accent);}
+.pc-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.pc-dot{width:6px;height:6px;border-radius:50%;}
+.pc-dot.online{background:var(--green);}
+.pc-dot.away{background:var(--yellow);}
+.pc-dot.offline{background:var(--muted2);}
+
+/* ============================================================
+   STAT CARDS
+============================================================ */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:800px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:18px 20px;
+}
+.sc-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sc-value{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.sc-trend{font-size:11px;color:var(--green);margin-top:4px;}
+
+/* ============================================================
+   ACTIVITY FEED
+============================================================ */
+.activity-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.act-content{flex:1;min-width:0;}
+.act-text{font-size:13px;color:var(--ink);line-height:1.4;}
+.act-time{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+
+/* ============================================================
+   SEARCH & FILTERS
+============================================================ */
+.search-bar{
+  display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+}
+.search-input-wrap{
+  flex:1;min-width:200px;position:relative;
+}
+.search-input-wrap svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--muted);
+}
+.search-input{
+  width:100%;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px 12px 40px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;outline:none;transition:.2s;
+}
+.search-input:focus{border-color:var(--line2);}
+.filter-btn{
+  padding:11px 16px;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;font-size:12px;color:var(--muted);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;white-space:nowrap;
+}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--ink);}
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+.sec-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.sec-header h2{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+.sec-header a{font-size:12px;color:var(--muted);text-decoration:none;transition:.2s;}
+.sec-header a:hover{color:var(--ink);}
+
+/* ============================================================
+   SETTINGS
+============================================================ */
+.settings-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-info .settings-title{font-size:13px;color:var(--ink);font-weight:500;}
+.settings-info .settings-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.toggle{
+  width:44px;height:24px;border-radius:12px;background:var(--line);
+  border:none;cursor:pointer;position:relative;transition:.2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green);}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;background:white;
+  transition:transform .2s;
+}
+.toggle.on::after{transform:translateX(20px);}
+.danger-zone{
+  background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);
+  border-radius:16px;padding:20px;margin-top:24px;
+}
+.danger-zone h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:14px;}
+.btn-danger{
+  padding:10px 20px;background:transparent;border:1px solid var(--red);
+  border-radius:10px;font-size:12px;color:var(--red);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;
+}
+.btn-danger:hover{background:rgba(192,57,43,.1);}
+</style>
+<style>
+/* ══════════════════════════════════════════
+   VARIABLES & BASE
+══════════════════════════════════════════ */
+:root{
+  --hero-glow:rgba(217,212,199,0.06);
+  --card-hover:rgba(217,212,199,0.04);
+}
+html{scroll-behavior:smooth;}
+
+/* ══════════════════════════════════════════
+   REVEAL ANIMATIONS
+══════════════════════════════════════════ */
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);
+}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:.1s;}
+.reveal-delay-2{transition-delay:.2s;}
+.reveal-delay-3{transition-delay:.3s;}
+.reveal-delay-4{transition-delay:.4s;}
+
+/* ══════════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════════ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:64px;
+  background:rgba(9,9,9,.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;z-index:100;
+}
+.nav-logo{
+  font-size:17px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;
+}
+.nav-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+.nav-center{display:flex;gap:32px;}
+.nav-center a{
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:.2s;letter-spacing:.02em;
+}
+.nav-center a:hover{color:var(--ink);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-ghost{
+  padding:8px 20px;border:1px solid var(--line);border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);background:transparent;
+  text-decoration:none;transition:.2s;letter-spacing:.04em;cursor:pointer;
+  font-family:'Geist',sans-serif;
+}
+.btn-ghost:hover{border-color:var(--line2);color:var(--ink);}
+.btn-solid{
+  padding:8px 20px;background:var(--accent);border:none;border-radius:10px;
+  font-size:12px;font-weight:700;color:#090909;text-decoration:none;
+  transition:.15s;letter-spacing:.04em;cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-solid:hover{opacity:.9;}
+@media(max-width:768px){
+  .navbar{padding:0 20px;}
+  .nav-center{display:none;}
+}
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:100px 48px 60px;
+  position:relative;overflow:hidden;
+}
+/* radial glow center */
+.hero::before{
+  content:'';position:absolute;
+  top:40%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:800px;
+  background:radial-gradient(circle, var(--hero-glow) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{
+  max-width:1200px;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+@media(max-width:900px){
+  .hero{padding:100px 24px 60px;}
+  .hero-inner{grid-template-columns:1fr;gap:48px;text-align:center;}
+  .hero-badges,.hero-cta{justify-content:center;}
+}
+
+/* LEFT */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--line);border-radius:20px;
+  padding:6px 14px;font-size:11px;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px;
+}
+.hero-badge span.live{
+  width:6px;height:6px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 8px rgba(61,153,112,.6);animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.hero h1{
+  font-size:clamp(44px,6.5vw,80px);
+  font-weight:900;letter-spacing:-.04em;line-height:1.05;
+  color:var(--ink);margin-bottom:20px;
+}
+.hero h1 .accent{
+  background:linear-gradient(135deg,var(--ink) 0%,var(--accent) 60%,var(--muted) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-desc{
+  font-size:clamp(15px,2vw,18px);color:var(--muted);
+  line-height:1.75;max-width:500px;margin-bottom:36px;
+}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
+.btn-hero-primary{
+  padding:14px 32px;background:var(--accent);border:none;border-radius:14px;
+  font-size:14px;font-weight:700;letter-spacing:.06em;color:#090909;
+  cursor:pointer;text-decoration:none;transition:.15s;
+  font-family:'Geist',sans-serif;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-hero-primary:hover{opacity:.9;transform:translateY(-1px);}
+.btn-hero-secondary{
+  padding:14px 32px;background:transparent;border:1px solid var(--line);
+  border-radius:14px;font-size:14px;font-weight:600;color:var(--muted);
+  cursor:pointer;text-decoration:none;transition:.2s;
+  font-family:'Geist',sans-serif;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-hero-secondary:hover{border-color:var(--line2);color:var(--ink);}
+
+.hero-social-proof{
+  display:flex;align-items:center;gap:14px;
+}
+.hsp-avatars{display:flex;}
+.hsp-av{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--bg);
+  margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.hsp-av:first-child{margin-left:0;}
+.hsp-text{font-size:12px;color:var(--muted);}
+.hsp-text b{color:var(--ink);}
+
+/* RIGHT — Phone mockup */
+.hero-phone-wrap{
+  display:flex;justify-content:center;align-items:center;
+  position:relative;
+}
+.hero-phone-wrap::before{
+  content:'';position:absolute;
+  width:320px;height:320px;
+  background:radial-gradient(circle, rgba(217,212,199,0.08) 0%, transparent 70%);
+  border-radius:50%;
+}
+.phone-float{
+  animation:float 5s ease-in-out infinite;
+  position:relative;z-index:1;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-16px);}
+}
+
+/* phone frame */
+@property --pa{syntax:'<angle>';initial-value:0deg;inherits:false;}
+.phone{
+  width:260px;height:535px;
+  background:linear-gradient(180deg,#6e6e6e,#3d3d3d,#6e6e6e);
+  border-radius:44px;padding:5px;
+  box-shadow:0 32px 80px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.07);
+  position:relative;
+}
+.phone::before{
+  content:'';position:absolute;inset:0;border-radius:44px;
+  background:conic-gradient(from var(--pa),
+    transparent 0%,transparent 72%,
+    rgba(255,255,255,0) 78%,rgba(255,255,255,.8) 84%,
+    rgba(255,255,255,.95) 88%,rgba(255,255,255,.8) 92%,
+    rgba(255,255,255,0) 96%,transparent 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  padding:5px;animation:pspin 6s linear infinite;pointer-events:none;z-index:5;
+}
+@keyframes pspin{to{--pa:360deg;}}
+.phone-screen{
+  width:100%;height:100%;background:#0b0b0f;
+  border-radius:39px;overflow:hidden;padding:12px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.phone-island{
+  width:80px;height:22px;background:#000;border-radius:999px;
+  margin:0 auto 4px;flex-shrink:0;
+}
+.phone-av-row{display:flex;align-items:center;gap:8px;}
+.phone-av{
+  width:36px;height:36px;border-radius:50%;
+  background:#18181f;border:1.5px solid #24242b;
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;
+}
+.phone-name{font-size:11px;font-weight:700;color:#F2F0EB;letter-spacing:.06em;}
+.phone-handle{font-size:9px;color:#6a6a72;margin-top:1px;}
+.phone-online{display:flex;align-items:center;gap:4px;margin-top:3px;}
+.phone-online-dot{width:5px;height:5px;border-radius:50%;background:#3d9970;animation:pulse 2s infinite;}
+.phone-online-txt{font-size:8px;color:#3d9970;letter-spacing:.04em;}
+.phone-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
+.phone-stat{background:#111116;border:1px solid #24242b;border-radius:8px;padding:7px 5px;text-align:center;}
+.phone-stat-n{font-size:12px;font-weight:700;color:#F2F0EB;}
+.phone-stat-l{font-size:7px;color:#6a6a72;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+.phone-games{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+.phone-game{
+  background:#111116;border:1px solid #24242b;border-radius:8px;
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.phone-music{
+  background:#111116;border:1px solid #24242b;border-radius:10px;
+  padding:8px;display:flex;align-items:center;gap:7px;
+}
+.phone-music-icon{width:26px;height:26px;border-radius:7px;background:#18181f;border:1px solid #24242b;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.phone-music-bar{flex:1;}
+.phone-music-title{font-size:9px;color:#F2F0EB;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.phone-music-artist{font-size:7px;color:#6a6a72;margin-top:1px;}
+.phone-progress{height:2px;background:#24242b;border-radius:1px;margin-top:5px;overflow:hidden;}
+.phone-progress-fill{height:100%;width:60%;background:#D9D4C7;border-radius:1px;animation:progress 4s linear infinite;}
+@keyframes progress{0%{width:0%;}100%{width:100%;}}
+
+/* floating badges around phone */
+.float-badge{
+  position:absolute;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:8px 12px;font-size:11px;color:var(--ink);
+  display:flex;align-items:center;gap:7px;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);animation:float 5s ease-in-out infinite;
+  white-space:nowrap;
+}
+.fb1{top:60px;right:-70px;animation-delay:-1.5s;}
+.fb2{bottom:120px;right:-60px;animation-delay:-3s;}
+.fb3{bottom:60px;left:-50px;animation-delay:-0.8s;}
+.fb4{top:130px;left:-60px;animation-delay:-2.2s;}
+.fb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+@media(max-width:900px){.float-badge{display:none;}}
+
+/* ══════════════════════════════════════════
+   MARQUEE — plataformas y juegos
+══════════════════════════════════════════ */
+.marquee-section{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:var(--s1);overflow:hidden;padding:16px 0;
+}
+.marquee-track{
+  display:flex;gap:0;animation:marquee 28s linear infinite;
+  width:max-content;
+}
+.marquee-track:hover{animation-play-state:paused;}
+.marquee-item{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 28px;border-right:1px solid var(--line);
+  font-size:13px;color:var(--muted);white-space:nowrap;
+  font-weight:500;letter-spacing:.02em;
+}
+.marquee-item span{font-size:18px;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ══════════════════════════════════════════
+   STATS SECTION
+══════════════════════════════════════════ */
+.stats-section{
+  max-width:1100px;margin:0 auto;
+  padding:80px 48px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+}
+@media(max-width:700px){.stats-section{grid-template-columns:repeat(2,1fr);padding:60px 24px;}}
+.stats-item{
+  text-align:center;padding:32px 20px;
+  border:1px solid var(--line);background:var(--s1);
+  transition:.2s;
+}
+.stats-item:first-child{border-radius:16px 0 0 16px;}
+.stats-item:last-child{border-radius:0 16px 16px 0;}
+@media(max-width:700px){
+  .stats-item:first-child{border-radius:16px 0 0 0;}
+  .stats-item:nth-child(2){border-radius:0 16px 0 0;}
+  .stats-item:nth-child(3){border-radius:0 0 0 16px;}
+  .stats-item:last-child{border-radius:0 0 16px 0;}
+}
+.stats-item:hover{background:var(--s2);}
+.stats-num{font-size:42px;font-weight:900;color:var(--ink);letter-spacing:-.04em;}
+.stats-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+
+/* ══════════════════════════════════════════
+   FEATURES — 3 main blocks
+══════════════════════════════════════════ */
+.features-section{max-width:1100px;margin:0 auto;padding:100px 48px;}
+@media(max-width:768px){.features-section{padding:60px 24px;}}
+.features-intro{text-align:center;margin-bottom:72px;}
+.label-tag{
+  display:inline-block;padding:5px 14px;border:1px solid var(--line);
+  border-radius:20px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:16px;
+}
+.section-title{
+  font-size:clamp(32px,5vw,52px);font-weight:800;
+  letter-spacing:-.03em;color:var(--ink);line-height:1.1;margin-bottom:14px;
+}
+.section-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:560px;margin:0 auto;}
+
+.feature-block{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;margin-bottom:100px;
+}
+.feature-block.reverse{direction:rtl;}
+.feature-block.reverse > *{direction:ltr;}
+@media(max-width:800px){
+  .feature-block,.feature-block.reverse{grid-template-columns:1fr;direction:ltr;}
+  .feature-block .feat-visual{order:-1;}
+}
+.feat-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:16px;
+}
+.feat-label::before{content:'';width:20px;height:1px;background:var(--line2);}
+.feat-title{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.2;margin-bottom:16px;}
+.feat-desc{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:28px;}
+.feat-points{display:flex;flex-direction:column;gap:10px;}
+.feat-point{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted);}
+.feat-point::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* Feature visuals */
+.feat-visual{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:20px;overflow:hidden;min-height:320px;
+  display:flex;flex-direction:column;padding:24px;gap:12px;
+  position:relative;
+}
+.feat-visual::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 80% 20%, rgba(217,212,199,.04) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+/* Visual 1: Profile cards */
+.vis-profile-card{
+  background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:14px;
+  display:flex;align-items:center;gap:12px;transition:.2s;
+}
+.vis-profile-card:hover{border-color:var(--line2);}
+.vis-av{width:40px;height:40px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.vis-info{flex:1;min-width:0;}
+.vis-name{font-size:12px;font-weight:600;color:var(--ink);}
+.vis-detail{font-size:10px;color:var(--muted);margin-top:2px;}
+.vis-compat{font-size:13px;font-weight:700;color:var(--accent);}
+.vis-status-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.vis-chip{padding:3px 8px;border-radius:20px;background:var(--line);font-size:9px;color:var(--muted);}
+
+/* Visual 2: Clip grid */
+.vis-clips{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.vis-clip{
+  border-radius:10px;background:var(--s2);border:1px solid var(--line);
+  overflow:hidden;
+}
+.vis-clip-thumb{
+  aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+  font-size:28px;position:relative;background:var(--line);
+}
+.vis-clip-play{
+  position:absolute;inset:0;background:rgba(0,0,0,.4);
+  display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;
+}
+.vis-clip:hover .vis-clip-play{opacity:1;}
+.vis-clip-play svg{width:20px;height:20px;fill:white;}
+.vis-clip-info{padding:6px 8px;}
+.vis-clip-title{font-size:10px;color:var(--ink);font-weight:500;}
+.vis-clip-meta{font-size:8px;color:var(--muted);margin-top:2px;}
+.vis-clip-featured{
+  border-radius:10px;background:var(--s2);border:1px solid var(--line);
+  padding:12px;display:flex;align-items:center;gap:10px;
+}
+
+/* Visual 3: World map / countries */
+.vis-countries{display:flex;flex-direction:column;gap:8px;}
+.vis-country{
+  display:flex;align-items:center;gap:10px;
+  background:var(--s2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+}
+.vis-country-flag{font-size:16px;}
+.vis-country-name{font-size:12px;color:var(--ink);font-weight:500;flex:1;}
+.vis-country-bar{height:4px;background:var(--line);border-radius:2px;width:80px;overflow:hidden;}
+.vis-country-fill{height:100%;background:var(--accent);border-radius:2px;}
+.vis-country-count{font-size:10px;color:var(--muted);}
+
+/* ══════════════════════════════════════════
+   PREMIUM SECTION
+══════════════════════════════════════════ */
+.premium-section{
+  background:var(--s1);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:100px 48px;
+}
+@media(max-width:768px){.premium-section{padding:60px 24px;}}
+.premium-inner{max-width:1100px;margin:0 auto;}
+.premium-header{text-align:center;margin-bottom:56px;}
+
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:800px){.plans-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto;}}
+
+.plan-card{
+  background:var(--bg);border:1px solid var(--line);
+  border-radius:20px;padding:28px;position:relative;transition:.2s;
+}
+.plan-card:hover{border-color:var(--line2);}
+.plan-card.featured{
+  background:var(--s2);border-color:var(--accent);
+  box-shadow:0 0 0 1px var(--accent);
+}
+.plan-badge-top{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--accent);color:#090909;
+  font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  padding:4px 14px;border-radius:20px;white-space:nowrap;
+}
+.plan-name{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.plan-price{
+  font-size:40px;font-weight:900;color:var(--ink);letter-spacing:-.03em;
+  line-height:1;margin-bottom:4px;
+}
+.plan-price sup{font-size:18px;vertical-align:super;color:var(--muted);}
+.plan-price sub{font-size:13px;color:var(--muted);font-weight:400;}
+.plan-period{font-size:12px;color:var(--muted);margin-bottom:24px;}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.plan-feature{
+  display:flex;align-items:center;gap:9px;
+  font-size:13px;color:var(--muted);
+}
+.plan-feature.yes{color:var(--ink);}
+.plan-feature .pf-icon{font-size:13px;width:18px;flex-shrink:0;text-align:center;}
+.plan-feature.no{opacity:.4;}
+.plan-btn{
+  width:100%;padding:13px;border-radius:12px;
+  font-size:13px;font-weight:700;letter-spacing:.06em;
+  font-family:'Geist',sans-serif;cursor:pointer;transition:.15s;
+  text-align:center;text-decoration:none;display:block;
+}
+.plan-btn.outline{background:transparent;border:1px solid var(--line);color:var(--muted);}
+.plan-btn.outline:hover{border-color:var(--line2);color:var(--ink);}
+.plan-btn.primary{background:var(--accent);border:none;color:#090909;}
+.plan-btn.primary:hover{opacity:.9;}
+
+/* ══════════════════════════════════════════
+   COMMUNITY / COUNTRIES SECTION
+══════════════════════════════════════════ */
+.community-section{max-width:1100px;margin:0 auto;padding:100px 48px;}
+@media(max-width:768px){.community-section{padding:60px 24px;}}
+.countries-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:48px;
+}
+@media(max-width:900px){.countries-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:500px){.countries-grid{grid-template-columns:repeat(2,1fr);}}
+.country-tile{
+  background:var(--s1);border:1px solid var(--line);border-radius:16px;
+  padding:20px 14px;text-align:center;transition:.2s;cursor:default;
+}
+.country-tile:hover{border-color:var(--line2);transform:translateY(-2px);}
+.ct-flag{font-size:30px;margin-bottom:8px;}
+.ct-name{font-size:12px;color:var(--ink);font-weight:500;margin-bottom:4px;}
+.ct-count{font-size:10px;color:var(--muted);letter-spacing:.06em;}
+
+/* ══════════════════════════════════════════
+   TESTIMONIALS
+══════════════════════════════════════════ */
+.testimonials-section{
+  background:var(--s1);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:100px 48px;
+}
+@media(max-width:768px){.testimonials-section{padding:60px 24px;}}
+.testi-inner{max-width:1100px;margin:0 auto;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px;}
+@media(max-width:800px){.testi-grid{grid-template-columns:1fr;}}
+.testi-card{
+  background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:24px;
+  transition:.2s;
+}
+.testi-card:hover{border-color:var(--line2);}
+.testi-stars{color:var(--accent);font-size:14px;margin-bottom:14px;letter-spacing:2px;}
+.testi-text{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:20px;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-av{width:36px;height:36px;border-radius:50%;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.testi-name{font-size:13px;font-weight:600;color:var(--ink);}
+.testi-info{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.04em;}
+
+/* ══════════════════════════════════════════
+   HOW IT WORKS
+══════════════════════════════════════════ */
+.how-section{max-width:1100px;margin:0 auto;padding:100px 48px;}
+@media(max-width:768px){.how-section{padding:60px 24px;}}
+.steps-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  margin-top:56px;position:relative;
+}
+@media(max-width:800px){.steps-row{grid-template-columns:1fr 1fr;gap:16px;}}
+@media(max-width:480px){.steps-row{grid-template-columns:1fr;}}
+.step-item{
+  padding:28px 24px;border:1px solid var(--line);
+  background:var(--s1);text-align:center;transition:.2s;
+  position:relative;
+}
+.step-item:first-child{border-radius:16px 0 0 16px;}
+.step-item:last-child{border-radius:0 16px 16px 0;}
+.step-item:hover{background:var(--s2);}
+.step-num{
+  font-size:11px;font-weight:700;letter-spacing:.14em;
+  color:var(--muted2);margin-bottom:14px;
+}
+.step-icon{font-size:28px;margin-bottom:12px;}
+.step-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* ══════════════════════════════════════════
+   CTA FINAL
+══════════════════════════════════════════ */
+.final-cta{
+  max-width:1100px;margin:0 auto;
+  padding:100px 48px;text-align:center;
+}
+@media(max-width:768px){.final-cta{padding:60px 24px;}}
+.final-cta h2{
+  font-size:clamp(36px,6vw,68px);font-weight:900;
+  letter-spacing:-.04em;color:var(--ink);line-height:1.05;margin-bottom:20px;
+}
+.final-cta p{font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 40px;line-height:1.7;}
+.final-cta .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+.footer{
+  border-top:1px solid var(--line);padding:40px 48px;
+}
+@media(max-width:768px){.footer{padding:32px 24px;}}
+.footer-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;
+}
+@media(max-width:700px){.footer-inner{grid-template-columns:1fr 1fr;gap:28px;}}
+@media(max-width:400px){.footer-inner{grid-template-columns:1fr;}}
+.footer-brand .footer-logo{font-size:18px;font-weight:800;letter-spacing:.1em;color:var(--ink);margin-bottom:10px;}
+.footer-tagline{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.footer-social{display:flex;gap:8px;}
+.footer-soc{
+  width:32px;height:32px;background:var(--s1);border:1px solid var(--line);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:var(--muted);transition:.2s;font-size:13px;
+}
+.footer-soc:hover{border-color:var(--line2);color:var(--ink);}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:14px;}
+.footer-col a{display:block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:9px;transition:.2s;}
+.footer-col a:hover{color:var(--ink);}
+.footer-bottom{
+  max-width:1100px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;padding-top:24px;border-top:1px solid var(--line);
+}
+.footer-copy{font-size:11px;color:var(--muted2);letter-spacing:.04em;}
+.footer-links-bottom{display:flex;gap:20px;}
+.footer-links-bottom a{font-size:11px;color:var(--muted2);text-decoration:none;transition:.2s;}
+.footer-links-bottom a:hover{color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+
+<!-- ════ NAVBAR ════ -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    VEX OS
+  </a>
+  <div class="nav-center">
+    <a href="#features">Características</a>
+    <a href="#premium">Premium</a>
+    <a href="#community">Comunidad</a>
+    <a href="tournaments.html">Torneos</a>
+    <a href="creators.html">Creadores</a>
+    <a href="rules.html">Reglas</a>
+  </div>
+  <div class="nav-right">
+    <a href="login.html" class="btn-ghost" id="navLogin">Entrar</a>
+    <a href="login.html#register" class="btn-solid" id="navRegister">Crear perfil gratis</a>
+  </div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <!-- Left text -->
+    <div>
+      <div class="hero-badge reveal"><span class="live"></span>Red social gamer · Beta abierta</div>
+      <h1 class="reveal reveal-delay-1">
+        Tu identidad<br>
+        digital como<br>
+        <span class="accent">jugador.</span>
+      </h1>
+      <p class="hero-desc reveal reveal-delay-2">
+        VEX OS es el perfil que los gamers siempre quisieron. Comparte tus juegos, clips, música y estadísticas. Encuentra jugadores de todo el mundo.
+      </p>
+      <div class="hero-cta reveal reveal-delay-3">
+        <a href="login.html#register" class="btn-hero-primary">
+          Crear perfil gratis
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="app.html" class="btn-hero-secondary">
+          Ver demo
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+      <div class="hero-social-proof reveal reveal-delay-4">
+        <div class="hsp-avatars">
+          <div class="hsp-av">🇵🇪</div>
+          <div class="hsp-av">🇲🇽</div>
+          <div class="hsp-av">🇦🇷</div>
+          <div class="hsp-av">🇨🇴</div>
+          <div class="hsp-av">🇪🇸</div>
+        </div>
+        <div class="hsp-text"><b>+10,000</b> gamers ya están aquí</div>
+      </div>
+    </div>
+
+    <!-- Right phone -->
+    <div class="hero-phone-wrap reveal reveal-delay-2">
+      <div class="phone-float">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-island"></div>
+            <div class="phone-av-row">
+              <div class="phone-av">🎮</div>
+              <div>
+                <div class="phone-name">VEX</div>
+                <div class="phone-handle">@qv3x · 🇵🇪</div>
+                <div class="phone-online"><div class="phone-online-dot"></div><div class="phone-online-txt">JUGANDO</div></div>
+              </div>
+            </div>
+            <div class="phone-stats">
+              <div class="phone-stat"><div class="phone-stat-n">724</div><div class="phone-stat-l">horas</div></div>
+              <div class="phone-stat"><div class="phone-stat-n">18</div><div class="phone-stat-l">juegos</div></div>
+              <div class="phone-stat"><div class="phone-stat-n">134</div><div class="phone-stat-l">amigos</div></div>
+            </div>
+            <div class="phone-games">
+              <div class="phone-game">🎯</div>
+              <div class="phone-game">🧱</div>
+              <div class="phone-game">🔫</div>
+              <div class="phone-game">🌆</div>
+            </div>
+            <div class="phone-music">
+              <div class="phone-music-icon">🎵</div>
+              <div class="phone-music-bar">
+                <div class="phone-music-title">Bad Bunny — Un Verano Sin Ti</div>
+                <div class="phone-music-artist">Urbano · Reggaeton</div>
+                <div class="phone-progress"><div class="phone-progress-fill"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating badges -->
+        <div class="float-badge fb1">
+          <div class="fb-dot" style="background:#3d9970;box-shadow:0 0 6px rgba(61,153,112,.5);"></div>
+          @nx_kira entró al lobby
+        </div>
+        <div class="float-badge fb2">
+          🏆 Logro desbloqueado
+        </div>
+        <div class="float-badge fb3">
+          🎬 Nuevo clip · 2.1K views
+        </div>
+        <div class="float-badge fb4">
+          🤝 Match 92% · @zeph
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ MARQUEE ════ -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <!-- duplicate for seamless loop -->
+    <div class="marquee-item"><span>🎯</span> Valorant</div>
+    <div class="marquee-item"><span>🔫</span> CS2</div>
+    <div class="marquee-item"><span>🧱</span> Roblox</div>
+    <div class="marquee-item"><span>🏗</span> Fortnite</div>
+    <div class="marquee-item"><span>🌆</span> GTA V</div>
+    <div class="marquee-item"><span>⛏</span> Minecraft</div>
+    <div class="marquee-item"><span>🏆</span> League of Legends</div>
+    <div class="marquee-item"><span>⚔️</span> Elden Ring</div>
+    <div class="marquee-item"><span>🦅</span> Apex Legends</div>
+    <div class="marquee-item"><span>💣</span> Warzone</div>
+    <div class="marquee-item"><span>🛡</span> Overwatch 2</div>
+    <div class="marquee-item"><span>⚽</span> EA FC 25</div>
+    <div class="marquee-item"><span>🎯</span> Valorant</div>
+    <div class="marquee-item"><span>🔫</span> CS2</div>
+    <div class="marquee-item"><span>🧱</span> Roblox</div>
+    <div class="marquee-item"><span>🏗</span> Fortnite</div>
+    <div class="marquee-item"><span>🌆</span> GTA V</div>
+    <div class="marquee-item"><span>⛏</span> Minecraft</div>
+    <div class="marquee-item"><span>🏆</span> League of Legends</div>
+    <div class="marquee-item"><span>⚔️</span> Elden Ring</div>
+    <div class="marquee-item"><span>🦅</span> Apex Legends</div>
+    <div class="marquee-item"><span>💣</span> Warzone</div>
+    <div class="marquee-item"><span>🛡</span> Overwatch 2</div>
+    <div class="marquee-item"><span>⚽</span> EA FC 25</div>
+  </div>
+</div>
+
+<!-- ════ STATS ════ -->
+<div style="max-width:1100px;margin:0 auto;padding:0 48px;">
+  <div class="stats-section" style="padding:0;">
+    <div class="stats-item reveal"><div class="stats-num" data-target="10000">0</div><div class="stats-label">Gamers activos</div></div>
+    <div class="stats-item reveal reveal-delay-1"><div class="stats-num" data-target="45">0</div><div class="stats-label">Países</div></div>
+    <div class="stats-item reveal reveal-delay-2"><div class="stats-num" data-target="250000">0</div><div class="stats-label">Horas jugadas</div></div>
+    <div class="stats-item reveal reveal-delay-3"><div class="stats-num" data-target="98">0</div><div class="stats-label">% satisfacción</div></div>
+  </div>
+</div>
+
+<!-- ════ FEATURES ════ -->
+<section class="features-section" id="features">
+  <div class="features-intro reveal">
+    <div class="label-tag">Características</div>
+    <div class="section-title">Todo lo que necesitas<br>en un solo lugar.</div>
+    <div class="section-sub">Desde tu biblioteca de juegos hasta tu playlist favorita. Tu identidad gamer completa.</div>
+  </div>
+
+  <!-- Feature 1: Encuentra amigos -->
+  <div class="feature-block reveal">
+    <div>
+      <div class="feat-label">Para jugadores</div>
+      <div class="feat-title">Encuentra tu dúo perfecto.</div>
+      <div class="feat-desc">El sistema de match analiza tus juegos, región, idioma y horario para conectarte con jugadores compatibles de verdad. No más lobbies vacíos.</div>
+      <div class="feat-points">
+        <div class="feat-point">Compatibilidad calculada por juegos en común</div>
+        <div class="feat-point">Filtra por región, idioma y horario de juego</div>
+        <div class="feat-point">Busca dúos, equipos o simplemente amigos</div>
+        <div class="feat-point">Sistema de match visual con porcentaje real</div>
+      </div>
+    </div>
+    <div class="feat-visual">
+      <div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Jugadores compatibles</div>
+      <div class="vis-profile-card">
+        <div class="vis-av">🎯</div>
+        <div class="vis-info">
+          <div class="vis-name">@nx_kira</div>
+          <div class="vis-detail">🇵🇪 Perú · Noche · ES</div>
+          <div class="vis-status-row">
+            <div class="vis-chip">Valorant</div>
+            <div class="vis-chip">CS2</div>
+            <div class="vis-chip">Roblox</div>
+          </div>
+        </div>
+        <div class="vis-compat">92%</div>
+      </div>
+      <div class="vis-profile-card">
+        <div class="vis-av">🔫</div>
+        <div class="vis-info">
+          <div class="vis-name">@zeph_gg</div>
+          <div class="vis-detail">🇲🇽 México · Tarde · ES</div>
+          <div class="vis-status-row">
+            <div class="vis-chip">Valorant</div>
+            <div class="vis-chip">GTA V</div>
+          </div>
+        </div>
+        <div class="vis-compat">78%</div>
+      </div>
+      <div class="vis-profile-card">
+        <div class="vis-av">⚔️</div>
+        <div class="vis-info">
+          <div class="vis-name">@mxrk</div>
+          <div class="vis-detail">🇦🇷 Argentina · Noche · ES</div>
+          <div class="vis-status-row">
+            <div class="vis-chip">CS2</div>
+            <div class="vis-chip">Elden Ring</div>
+          </div>
+        </div>
+        <div class="vis-compat">71%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2: Comparte clips -->
+  <div class="feature-block reverse reveal">
+    <div>
+      <div class="feat-label">Para creadores</div>
+      <div class="feat-title">Comparte tus mejores jugadas.</div>
+      <div class="feat-desc">Sube tus clips y highlights directamente en tu perfil. Fija tu mejor jugada, organiza por juego y acumula vistas. Tu contenido, tu identidad.</div>
+      <div class="feat-points">
+        <div class="feat-point">Galería de clips por juego</div>
+        <div class="feat-point">Clip fijado destacado en tu perfil</div>
+        <div class="feat-point">Contador de vistas y likes</div>
+        <div class="feat-point">Comparte tu link de perfil con cualquier persona</div>
+      </div>
+    </div>
+    <div class="feat-visual">
+      <div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📌 Clip destacado</div>
+      <div class="vis-clip-featured">
+        <div style="width:64px;height:36px;border-radius:6px;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🎯</div>
+        <div>
+          <div style="font-size:12px;color:var(--ink);font-weight:600;">Ace en Split · Rank Diamante</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;">Valorant · 1.2K views · hace 3 días</div>
+        </div>
+      </div>
+      <div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:8px 0 6px;">Highlights</div>
+      <div class="vis-clips">
+        <div class="vis-clip">
+          <div class="vis-clip-thumb">🔫<div class="vis-clip-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="vis-clip-info"><div class="vis-clip-title">4K + clutch</div><div class="vis-clip-meta">CS2 · 834 views</div></div>
+        </div>
+        <div class="vis-clip">
+          <div class="vis-clip-thumb">🧱<div class="vis-clip-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="vis-clip-info"><div class="vis-clip-title">Escape épico</div><div class="vis-clip-meta">Roblox · 2.1K views</div></div>
+        </div>
+        <div class="vis-clip">
+          <div class="vis-clip-thumb">🌆<div class="vis-clip-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="vis-clip-info"><div class="vis-clip-title">Lobby limpio</div><div class="vis-clip-meta">GTA V · 3.4K views</div></div>
+        </div>
+        <div class="vis-clip">
+          <div class="vis-clip-thumb">🎯<div class="vis-clip-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="vis-clip-info"><div class="vis-clip-title">Sniper 1v5</div><div class="vis-clip-meta">Val · 560 views</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3: Perfil completo -->
+  <div class="feature-block reveal">
+    <div>
+      <div class="feat-label">Tu identidad</div>
+      <div class="feat-title">Un perfil que dice quién eres.</div>
+      <div class="feat-desc">No es un link en bio genérico. Es tu sistema operativo personal como jugador. Juegos, música, stats, insignias, clanes y redes. Todo en un solo lugar.</div>
+      <div class="feat-points">
+        <div class="feat-point">Nivel, XP e insignias automáticas por actividad</div>
+        <div class="feat-point">Biblioteca de juegos con horas y rachas activas</div>
+        <div class="feat-point">Música: artistas, géneros y playlist de Spotify</div>
+        <div class="feat-point">Redes: Discord, YouTube, Kick, TikTok, Steam...</div>
+      </div>
+    </div>
+    <div class="feat-visual">
+      <div class="vis-countries">
+        <div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Top países activos</div>
+        <div class="vis-country"><div class="vis-country-flag">🇵🇪</div><div class="vis-country-name">Perú</div><div class="vis-country-bar"><div class="vis-country-fill" style="width:90%"></div></div><div class="vis-country-count">3.2K gamers</div></div>
+        <div class="vis-country"><div class="vis-country-flag">🇲🇽</div><div class="vis-country-name">México</div><div class="vis-country-bar"><div class="vis-country-fill" style="width:75%"></div></div><div class="vis-country-count">2.8K gamers</div></div>
+        <div class="vis-country"><div class="vis-country-flag">🇦🇷</div><div class="vis-country-name">Argentina</div><div class="vis-country-bar"><div class="vis-country-fill" style="width:60%"></div></div><div class="vis-country-count">1.9K gamers</div></div>
+        <div class="vis-country"><div class="vis-country-flag">🇨🇴</div><div class="vis-country-name">Colombia</div><div class="vis-country-bar"><div class="vis-country-fill" style="width:48%"></div></div><div class="vis-country-count">1.4K gamers</div></div>
+        <div class="vis-country"><div class="vis-country-flag">🇨🇱</div><div class="vis-country-name">Chile</div><div class="vis-country-bar"><div class="vis-country-fill" style="width:35%"></div></div><div class="vis-country-count">890 gamers</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ HOW IT WORKS ════ -->
+<section class="how-section">
+  <div class="features-intro reveal">
+    <div class="label-tag">Cómo funciona</div>
+    <div class="section-title">Listo en 4 pasos.</div>
+    <div class="section-sub">Crear tu perfil toma menos de 3 minutos.</div>
+  </div>
+  <div class="steps-row">
+    <div class="step-item reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon">📝</div>
+      <div class="step-title">Crea tu cuenta</div>
+      <div class="step-desc">Elige tu username único y contraseña. Gratis y sin tarjeta de crédito.</div>
+    </div>
+    <div class="step-item reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <div class="step-icon">🎮</div>
+      <div class="step-title">Configura tu perfil</div>
+      <div class="step-desc">Añade tus juegos favoritos, música, plataformas y redes sociales.</div>
+    </div>
+    <div class="step-item reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <div class="step-icon">🤝</div>
+      <div class="step-title">Encuentra jugadores</div>
+      <div class="step-desc">El sistema de match te conecta con gamers compatibles de tu región.</div>
+    </div>
+    <div class="step-item reveal reveal-delay-3">
+      <div class="step-num">04</div>
+      <div class="step-icon">🚀</div>
+      <div class="step-title">Comparte y crece</div>
+      <div class="step-desc">Comparte tu link, sube clips y construye tu comunidad gamer.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ COMMUNITY ════ -->
+<section class="community-section" id="community">
+  <div class="features-intro reveal">
+    <div class="label-tag">Comunidad global</div>
+    <div class="section-title">Jugadores de todo<br>el mundo.</div>
+    <div class="section-sub">Encuentra gamers en tu idioma, de tu región, con los mismos juegos. La comunidad más grande de LATAM y España.</div>
+  </div>
+  <div class="countries-grid">
+    <div class="country-tile reveal"><div class="ct-flag">🇵🇪</div><div class="ct-name">Perú</div><div class="ct-count">3,218 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-1"><div class="ct-flag">🇲🇽</div><div class="ct-name">México</div><div class="ct-count">2,847 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-2"><div class="ct-flag">🇦🇷</div><div class="ct-name">Argentina</div><div class="ct-count">1,932 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-3"><div class="ct-flag">🇨🇴</div><div class="ct-name">Colombia</div><div class="ct-count">1,411 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-4"><div class="ct-flag">🇨🇱</div><div class="ct-name">Chile</div><div class="ct-count">893 gamers</div></div>
+    <div class="country-tile reveal"><div class="ct-flag">🇪🇸</div><div class="ct-name">España</div><div class="ct-count">762 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-1"><div class="ct-flag">🇻🇪</div><div class="ct-name">Venezuela</div><div class="ct-count">541 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-2"><div class="ct-flag">🇧🇷</div><div class="ct-name">Brasil</div><div class="ct-count">489 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-3"><div class="ct-flag">🇺🇾</div><div class="ct-name">Uruguay</div><div class="ct-count">321 gamers</div></div>
+    <div class="country-tile reveal reveal-delay-4"><div class="ct-flag">🇺🇸</div><div class="ct-name">USA</div><div class="ct-count">298 gamers</div></div>
+  </div>
+</section>
+
+<!-- ════ PREMIUM ════ -->
+<section class="premium-section" id="premium">
+  <div class="premium-inner">
+    <div class="premium-header reveal">
+      <div class="label-tag">Planes</div>
+      <div class="section-title">Empieza gratis.<br>Crece con Premium.</div>
+      <div class="section-sub" style="margin-top:12px;">El plan gratuito ya incluye todo lo esencial. Premium desbloquea herramientas avanzadas para los que van en serio.</div>
+    </div>
+    <div class="plans-grid">
+
+      <!-- FREE -->
+      <div class="plan-card reveal">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0<sub>/mes</sub></div>
+        <div class="plan-period">Para siempre gratis</div>
+        <ul class="plan-features">
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Perfil gamer completo</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Hasta 5 juegos favoritos</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Sistema de match básico</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> 10 clips en galería</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Link de perfil compartible</li>
+          <li class="plan-feature no"><span class="pf-icon">✗</span> Badge Premium exclusivo</li>
+          <li class="plan-feature no"><span class="pf-icon">✗</span> Stats avanzados</li>
+          <li class="plan-feature no"><span class="pf-icon">✗</span> Match ilimitado</li>
+        </ul>
+        <a href="login.html#register" class="plan-btn outline">Empezar gratis</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan-card featured reveal reveal-delay-1">
+        <div class="plan-badge-top">MÁS POPULAR</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><sup>$</sup>4<sub>.99/mes</sub></div>
+        <div class="plan-period">O $39.99/año · ahorra 33%</div>
+        <ul class="plan-features">
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Todo lo del plan Free</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Juegos ilimitados</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Match avanzado + filtros</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> 100 clips en galería</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Badge PRO en perfil</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Stats avanzados y gráficas</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Perfil personalizable</li>
+          <li class="plan-feature no"><span class="pf-icon">✗</span> Soporte prioritario</li>
+        </ul>
+        <a href="login.html#register" class="plan-btn primary">Empezar con Pro</a>
+      </div>
+
+      <!-- ELITE -->
+      <div class="plan-card reveal reveal-delay-2">
+        <div class="plan-name">Elite</div>
+        <div class="plan-price"><sup>$</sup>12<sub>.99/mes</sub></div>
+        <div class="plan-period">Para streamers y creadores</div>
+        <ul class="plan-features">
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Todo lo del plan Pro</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Clips ilimitados</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Badge ELITE exclusivo</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Perfil verificado ✓</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Destacado en Explore</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Análisis de audiencia</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> Soporte prioritario 24h</li>
+          <li class="plan-feature yes"><span class="pf-icon">✓</span> API para streamers</li>
+        </ul>
+        <a href="login.html#register" class="plan-btn outline">Empezar Elite</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════ TESTIMONIALS ════ -->
+<section class="testimonials-section">
+  <div class="testi-inner">
+    <div class="features-intro reveal">
+      <div class="label-tag">Comunidad</div>
+      <div class="section-title">Lo que dicen<br>los jugadores.</div>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Finalmente un perfil que muestra quién soy como gamer. No solo mis juegos sino también mi música, mis clips y mis stats. Exactamente lo que necesitaba."</div>
+        <div class="testi-author">
+          <div class="testi-av">🎯</div>
+          <div>
+            <div class="testi-name">@darkfragger99</div>
+            <div class="testi-info">PERÚ · VALORANT DIAMANTE</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Encontré mi dúo de Valorant en menos de un día. El sistema de match es increíble, me conectó con alguien del mismo rango, mismo horario y misma música."</div>
+        <div class="testi-author">
+          <div class="testi-av">⚡</div>
+          <div>
+            <div class="testi-name">@nxy_storm</div>
+            <div class="testi-info">MÉXICO · CS2 GLOBAL ELITE</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Comparto mi link de VEX OS en todas mis redes. Es mi carta de presentación como gamer y streamer. Mucho mejor que cualquier Linktree o bio en bio."</div>
+        <div class="testi-author">
+          <div class="testi-av">🎬</div>
+          <div>
+            <div class="testi-name">@rexplays_ar</div>
+            <div class="testi-info">ARGENTINA · STREAMER · KICK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FINAL CTA ════ -->
+<section class="final-cta">
+  <div class="label-tag reveal">¿Listo?</div>
+  <h2 class="reveal reveal-delay-1">Crea tu perfil.<br>Es gratis.</h2>
+  <p class="reveal reveal-delay-2">Sin tarjeta de crédito. Sin trampa. Listo en 3 minutos. Únete a +10,000 gamers que ya tienen su identidad digital.</p>
+  <div class="cta-btns reveal reveal-delay-3">
+    <a href="login.html#register" class="btn-hero-primary">
+      CREAR PERFIL GRATIS
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="app.html" class="btn-hero-secondary">Ver demo del perfil</a>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">VEX OS</div>
+      <div class="footer-tagline">Tu identidad digital como jugador. La red social gamer de LATAM y España.</div>
+      <div class="footer-social">
+        <a href="https://discord.gg/yXXG7jmvq4" target="_blank" class="footer-soc">💬</a>
+        <a href="https://www.youtube.com/channel/UCvHihDFoY5kYtEY3wKatELA" target="_blank" class="footer-soc">▶️</a>
+        <a href="https://kick.com/qv3x" target="_blank" class="footer-soc">🟩</a>
+        <a href="https://www.tiktok.com/@vexi.p" target="_blank" class="footer-soc">🎵</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Producto</h4>
+      <a href="#features">Características</a>
+      <a href="#premium">Precios</a>
+      <a href="app.html">Demo</a>
+      <a href="setup.html">Onboarding</a>
+    </div>
+    <div class="footer-col">
+      <h4>Comunidad</h4>
+      <a href="#community">Países</a>
+      <a href="creators.html">Creadores</a>
+      <a href="https://discord.gg/yXXG7jmvq4" target="_blank">Discord</a>
+      <a href="rules.html">Reglas</a>
+    </div>
+    <div class="footer-col">
+      <h4>Cuenta</h4>
+      <a href="login.html">Entrar</a>
+      <a href="login.html#register">Registrarse</a>
+      <a href="login.html#register">Premium</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 VEX OS · Todos los derechos reservados</div>
+    <div class="footer-links-bottom">
+      <a href="privacy.html">Términos</a>
+      <a href="privacy.html">Privacidad</a>
+      <a href="rules.html">Reglas</a>
+    </div>
+  </div>
+</footer>
+
+<script>/* ============================================================
+   VEX OS — auth.js
+   Login, register, session helpers
+============================================================ */
+
+function hashSimple(s){
+  let h=0;
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xFFFFFF;
+  return h.toString(16);
+}
+
+function getAccounts(){ return JSON.parse(localStorage.getItem('vex_accounts')||'{}'); }
+function setAccounts(a){ localStorage.setItem('vex_accounts',JSON.stringify(a)); }
+function getSession(){ return JSON.parse(localStorage.getItem('vex_user')||'null'); }
+function setSession(u){ localStorage.setItem('vex_user',JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem('vex_user'); }
+function isLoggedIn(){ return !!getSession(); }
+
+function doLogin(user, pass, errEl){
+  user=user.trim().toLowerCase();
+  if(!user||!pass){ showErr(errEl,'Completa todos los campos'); return false; }
+  const accounts=getAccounts();
+  if(!accounts[user]){ showErr(errEl,'Usuario no encontrado'); return false; }
+  if(accounts[user].passHash!==hashSimple(pass)){ showErr(errEl,'Contraseña incorrecta'); return false; }
+  setSession(accounts[user]);
+  // Sync vex_profile with account data
+  localStorage.setItem('vex_profile', JSON.stringify(accounts[user].profile||{}));
+  return true;
+}
+
+function doRegister(data, errEl){
+  const {username, pass, age, country, lang, schedule}=data;
+  const key=username.trim().toLowerCase();
+  if(!key||!pass||!age||!country){ showErr(errEl,'Completa todos los campos'); return false; }
+  if(isNaN(age)||parseInt(age)<14){ showErr(errEl,'Debes tener al menos 14 años'); return false; }
+  if(pass.length<6){ showErr(errEl,'Contraseña mínimo 6 caracteres'); return false; }
+  if(!/^[a-zA-Z0-9_]+$/.test(key)){ showErr(errEl,'Username: solo letras, números y _'); return false; }
+  const accounts=getAccounts();
+  if(accounts[key]){ showErr(errEl,'Username ya en uso'); return false; }
+
+  const profile={
+    name: username, username: key, bio:'', country, lang, schedule,
+    status:'online', avatar:'', games:[], music:[], socials:{}, setupDone:false
+  };
+  const account={ username:key, passHash:hashSimple(pass), age:parseInt(age), createdAt:Date.now(), profile };
+  accounts[key]=account;
+  setAccounts(accounts);
+  setSession(account);
+  localStorage.setItem('vex_profile', JSON.stringify(profile));
+  return true;
+}
+
+function showErr(el, msg){
+  if(!el) return;
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4000);
+}
+
+function requireAuth(redirect='login.html'){
+  if(!isLoggedIn()) window.location.href=redirect;
+}
+
+function logout(){
+  clearSession();
+  window.location.href='index.html';
+}
+
+// Spawn background particles (shared utility)
+function spawnParticles(containerId='ambient', count=20){
+  const amb=document.getElementById(containerId);
+  if(!amb) return;
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div'); s.className='speck';
+    s.style.left=Math.random()*100+'vw';
+    s.style.setProperty('--dx',(Math.random()*60-30)+'px');
+    s.style.animationDuration=(12+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    amb.appendChild(s);
+  }
+}
+</script>
+<script>
+spawnParticles('ambient', 24);
+
+/* ---- Reveal on scroll ---- */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ---- Animated counters ---- */
+function animateCounter(el, target, suffix='') {
+  const duration = 1800;
+  const start = performance.now();
+  const format = n => n >= 1000 ? (n/1000).toFixed(n >= 10000 ? 0 : 1)+'K' : n;
+  const update = now => {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 4);
+    el.textContent = format(Math.round(target * ease)) + suffix;
+    if(p < 1) requestAnimationFrame(update);
+    else el.textContent = format(target) + suffix;
+  };
+  requestAnimationFrame(update);
+}
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      const el = e.target;
+      const t = parseInt(el.dataset.target);
+      const suffix = t === 98 ? '%' : '';
+      animateCounter(el, t, suffix);
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
+
+/* ---- Auth state ---- */
+if(isLoggedIn()) {
+  const u = getSession();
+  document.getElementById('navLogin').textContent = 'Mi perfil';
+  document.getElementById('navLogin').href = 'dashboard.html';
+  document.getElementById('navRegister').textContent = (u.username||'VEX').toUpperCase();
+  document.getElementById('navRegister').href = 'dashboard.html';
+}
+</script>
+</body>
+</html>

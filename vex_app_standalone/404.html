@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEX OS · 404</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#090909;--s1:#111116;--s2:#18181f;--line:#24242b;--ink:#F2F0EB;--muted:#6a6a72;--accent:#D9D4C7;}
+body{background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Geist',sans-serif;-webkit-font-smoothing:antialiased;color:var(--ink);text-align:center;padding:24px;}
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.speck{position:absolute;bottom:-4px;width:1.5px;height:1.5px;border-radius:50%;background:rgba(242,240,235,0.14);animation:drift linear infinite;}
+@keyframes drift{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-110vh) translateX(var(--dx,20px));opacity:0;}}
+.wrap{position:relative;z-index:1;max-width:480px;}
+.code{font-size:clamp(80px,18vw,140px);font-weight:900;letter-spacing:-.06em;color:var(--s2);line-height:1;margin-bottom:8px;position:relative;}
+.code::after{content:'404';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--ink) 0%,var(--accent) 60%,var(--muted) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.icon{font-size:48px;margin-bottom:20px;}
+h1{font-size:clamp(22px,4vw,30px);font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;}
+p{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:32px;}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.btn{padding:12px 24px;border-radius:12px;font-size:13px;font-weight:600;letter-spacing:.04em;cursor:pointer;text-decoration:none;transition:.15s;font-family:'Geist',sans-serif;}
+.btn.primary{background:var(--accent);border:none;color:#090909;}
+.btn.primary:hover{opacity:.9;}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);}
+.btn.ghost:hover{border-color:#2e2e38;color:var(--ink);}
+.logo{margin-top:48px;font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+</style>
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+<div class="wrap">
+  <div class="icon">🎮</div>
+  <div class="code">404</div>
+  <h1>Página no encontrada</h1>
+  <p>Esta pantalla no existe en VEX OS.<br>Puede que el link esté roto o la página haya sido movida.</p>
+  <div class="btns">
+    <a href="index.html" class="btn primary">Ir al inicio</a>
+    <a href="dashboard.html" class="btn ghost">Mi dashboard</a>
+  </div>
+  <a href="index.html" class="logo"><div class="logo-dot"></div>VEX OS</a>
+</div>
+<script>
+const amb=document.getElementById('ambient');
+for(let i=0;i<14;i++){
+  const s=document.createElement('div');s.className='speck';
+  s.style.left=Math.random()*100+'vw';
+  s.style.setProperty('--dx',(Math.random()*60-30)+'px');
+  s.style.animationDuration=(12+Math.random()*14)+'s';
+  s.style.animationDelay=(Math.random()*14)+'s';
+  amb.appendChild(s);
+}
+</script>
+</body>
+</html>

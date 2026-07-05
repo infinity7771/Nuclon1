@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEX OS · Privacidad y Términos</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>/* ============================================================
+   VEX OS — shared.css
+   Estilos compartidos para páginas fuera del iPhone
+============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;}
+*::-webkit-scrollbar{display:none;}
+
+:root{
+  --bg:#090909;
+  --s1:#111116;
+  --s2:#18181f;
+  --line:#24242b;
+  --line2:#2e2e38;
+  --ink:#F2F0EB;
+  --muted:#6a6a72;
+  --muted2:#3e3e47;
+  --accent:#D9D4C7;
+  --green:#3d9970;
+  --yellow:#c8a84b;
+  --red:#c0392b;
+  --nav-h:64px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Geist',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ---- Partículas ---- */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.speck{
+  position:absolute;bottom:-4px;width:1.5px;height:1.5px;border-radius:50%;
+  background:rgba(242,240,235,0.15);animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:1;}90%{opacity:1;}
+  100%{transform:translateY(-110vh) translateX(var(--dx,20px));opacity:0;}
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(9,9,9,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;z-index:100;
+}
+.nav-logo{
+  font-size:18px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink);text-decoration:none;
+}
+.nav-links{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-links a{
+  font-size:12px;font-weight:500;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;transition:.2s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--ink);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+.nav-cta{
+  display:flex;align-items:center;gap:10px;
+}
+.btn-nav-ghost{
+  padding:8px 18px;border:1px solid var(--line);border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;transition:.2s;letter-spacing:.06em;
+  background:transparent;cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-ghost:hover{border-color:var(--line2);color:var(--ink);}
+.btn-nav-solid{
+  padding:8px 18px;background:var(--accent);border:none;border-radius:10px;
+  font-size:12px;font-weight:700;color:var(--bg);
+  text-decoration:none;transition:.15s;letter-spacing:.06em;
+  cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-solid:hover{opacity:.9;}
+
+/* Mobile nav toggle */
+.nav-mobile-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  color:var(--muted);padding:4px;
+}
+@media(max-width:700px){
+  .navbar{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-mobile-toggle{display:block;}
+}
+
+/* ============================================================
+   PAGE WRAPPER
+============================================================ */
+.page{
+  padding-top:var(--nav-h);
+  min-height:100vh;
+  position:relative;z-index:1;
+}
+
+/* ============================================================
+   COMMON SECTIONS
+============================================================ */
+.section{
+  max-width:1100px;
+  margin:0 auto;
+  padding:80px 40px;
+}
+@media(max-width:700px){.section{padding:60px 20px;}}
+
+.section-label{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.section-title{
+  font-size:clamp(28px,5vw,48px);font-weight:800;
+  letter-spacing:-.02em;line-height:1.15;color:var(--ink);
+  margin-bottom:14px;
+}
+.section-sub{
+  font-size:16px;color:var(--muted);line-height:1.7;
+  max-width:560px;
+}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--line);margin:0;}
+
+/* Cards */
+.card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+}
+.card:hover{border-color:var(--line2);}
+
+/* ============================================================
+   BUTTONS (full-page)
+============================================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:12px;
+  font-size:13px;font-weight:700;letter-spacing:.08em;
+  font-family:'Geist',sans-serif;cursor:pointer;
+  text-decoration:none;transition:.15s;border:none;
+}
+.btn-primary{background:var(--accent);color:var(--bg);}
+.btn-primary:hover{opacity:.9;}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--line2);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer{
+  border-top:1px solid var(--line);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+  position:relative;z-index:1;
+}
+.footer-logo{font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:.2s;}
+.footer-links a:hover{color:var(--ink);}
+.footer-copy{font-size:10px;color:var(--muted2);letter-spacing:.06em;}
+@media(max-width:600px){.footer{padding:24px 20px;flex-direction:column;text-align:center;}}
+
+/* ============================================================
+   FORM INPUTS (login, etc)
+============================================================ */
+.form-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:20px;padding:32px;width:100%;max-width:420px;
+}
+.form-field{margin-bottom:16px;}
+.form-field label{
+  display:block;font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:7px;
+}
+.form-field input,.form-field select{
+  width:100%;background:var(--s2);border:1px solid var(--line);
+  border-radius:10px;padding:13px 16px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--line2);}
+.form-tabs{
+  display:flex;background:var(--s2);border:1px solid var(--line);
+  border-radius:12px;padding:4px;margin-bottom:24px;gap:4px;
+}
+.form-tab{
+  flex:1;padding:9px;border:none;background:transparent;
+  font-family:'Geist',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;color:var(--muted);cursor:pointer;
+  border-radius:9px;transition:.2s;
+}
+.form-tab.active{background:var(--s1);color:var(--ink);border:1px solid var(--line);}
+.form-error{
+  font-size:11px;color:var(--red);display:none;
+  padding:8px 12px;background:rgba(192,57,43,.08);
+  border:1px solid rgba(192,57,43,.25);border-radius:8px;margin-bottom:12px;
+}
+.form-error.show{display:block;}
+.form-note{
+  font-size:10px;color:var(--muted);line-height:1.6;
+  margin-top:16px;padding:12px;background:var(--s2);
+  border:1px solid var(--line);border-radius:10px;
+}
+.form-note b{color:var(--muted2);}
+
+/* ============================================================
+   DASHBOARD LAYOUT
+============================================================ */
+.app-layout{
+  display:flex;min-height:calc(100vh - var(--nav-h));
+  padding-top:var(--nav-h);
+}
+.sidebar{
+  width:220px;flex-shrink:0;
+  border-right:1px solid var(--line);
+  padding:24px 16px;
+  position:fixed;top:var(--nav-h);left:0;bottom:0;
+  overflow-y:auto;background:var(--bg);z-index:40;
+}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px;}
+.sidebar-link{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:.15s;cursor:pointer;border:none;background:none;width:100%;
+  font-family:'Geist',sans-serif;
+}
+.sidebar-link:hover{background:var(--s1);color:var(--ink);}
+.sidebar-link.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.sidebar-link svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.sidebar-link .badge-count{
+  margin-left:auto;font-size:9px;background:var(--accent);
+  color:var(--bg);border-radius:20px;padding:2px 7px;font-weight:700;
+}
+.main-content{
+  margin-left:220px;flex:1;padding:32px;
+  max-width:calc(100vw - 220px);
+}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main-content{margin-left:0;max-width:100%;padding:20px;}
+}
+
+/* ============================================================
+   PROFILE CARDS
+============================================================ */
+.profile-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;transition:.2s;cursor:pointer;
+}
+.profile-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.pc-banner{height:60px;background:linear-gradient(135deg,var(--s2),var(--line));position:relative;}
+.pc-av{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--bg);
+  position:absolute;bottom:-26px;left:16px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
+}
+.pc-av img{width:100%;height:100%;object-fit:cover;}
+.pc-body{padding:34px 16px 16px;}
+.pc-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;}
+.pc-handle{font-size:11px;color:var(--muted);margin-top:2px;}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0;}
+.pc-tag{font-size:9px;padding:3px 8px;border-radius:20px;background:var(--s2);border:1px solid var(--line);color:var(--muted);}
+.pc-games{display:flex;gap:4px;margin-top:8px;}
+.pc-game{width:28px;height:28px;border-radius:8px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pc-footer{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.pc-compat{font-size:12px;font-weight:700;color:var(--accent);}
+.pc-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.pc-dot{width:6px;height:6px;border-radius:50%;}
+.pc-dot.online{background:var(--green);}
+.pc-dot.away{background:var(--yellow);}
+.pc-dot.offline{background:var(--muted2);}
+
+/* ============================================================
+   STAT CARDS
+============================================================ */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:800px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:18px 20px;
+}
+.sc-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sc-value{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.sc-trend{font-size:11px;color:var(--green);margin-top:4px;}
+
+/* ============================================================
+   ACTIVITY FEED
+============================================================ */
+.activity-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.act-content{flex:1;min-width:0;}
+.act-text{font-size:13px;color:var(--ink);line-height:1.4;}
+.act-time{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+
+/* ============================================================
+   SEARCH & FILTERS
+============================================================ */
+.search-bar{
+  display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+}
+.search-input-wrap{
+  flex:1;min-width:200px;position:relative;
+}
+.search-input-wrap svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--muted);
+}
+.search-input{
+  width:100%;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px 12px 40px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;outline:none;transition:.2s;
+}
+.search-input:focus{border-color:var(--line2);}
+.filter-btn{
+  padding:11px 16px;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;font-size:12px;color:var(--muted);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;white-space:nowrap;
+}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--ink);}
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+.sec-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.sec-header h2{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+.sec-header a{font-size:12px;color:var(--muted);text-decoration:none;transition:.2s;}
+.sec-header a:hover{color:var(--ink);}
+
+/* ============================================================
+   SETTINGS
+============================================================ */
+.settings-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-info .settings-title{font-size:13px;color:var(--ink);font-weight:500;}
+.settings-info .settings-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.toggle{
+  width:44px;height:24px;border-radius:12px;background:var(--line);
+  border:none;cursor:pointer;position:relative;transition:.2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green);}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;background:white;
+  transition:transform .2s;
+}
+.toggle.on::after{transform:translateX(20px);}
+.danger-zone{
+  background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);
+  border-radius:16px;padding:20px;margin-top:24px;
+}
+.danger-zone h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:14px;}
+.btn-danger{
+  padding:10px 20px;background:transparent;border:1px solid var(--red);
+  border-radius:10px;font-size:12px;color:var(--red);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;
+}
+.btn-danger:hover{background:rgba(192,57,43,.1);}
+</style>
+<style>
+.doc-wrap{max-width:720px;margin:0 auto;padding:88px 40px 80px;}
+@media(max-width:600px){.doc-wrap{padding:76px 20px 60px;}}
+.doc-tabs{display:flex;gap:4px;margin-bottom:36px;border-bottom:1px solid var(--line);padding-bottom:0;}
+.doc-tab{padding:10px 20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:'Geist',sans-serif;background:none;border-top:none;border-left:none;border-right:none;}
+.doc-tab:hover{color:var(--ink);}
+.doc-tab.active{color:var(--ink);border-bottom-color:var(--accent);}
+.doc-panel{display:none;}
+.doc-panel.active{display:block;}
+.doc-title{font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:8px;}
+.doc-date{font-size:12px;color:var(--muted);margin-bottom:40px;letter-spacing:.04em;}
+.doc-section{margin-bottom:36px;}
+.doc-h2{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+.doc-h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px;margin-top:16px;}
+.doc-p{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:10px;}
+.doc-ul{padding-left:20px;margin-bottom:10px;}
+.doc-ul li{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:4px;}
+.doc-highlight{background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;}
+.doc-highlight p{font-size:13px;color:var(--muted);margin:0;line-height:1.7;}
+.doc-highlight b{color:var(--ink);}
+.toc{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:32px;}
+.toc h3{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.toc a{display:block;font-size:13px;color:var(--muted);text-decoration:none;padding:4px 0;transition:.15s;}
+.toc a:hover{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;"><div class="nav-logo-dot"></div>VEX OS</a>
+  <div class="nav-center">
+    <a href="index.html">Inicio</a>
+    <a href="creators.html">Creadores</a>
+    <a href="rules.html">Reglas</a>
+  </div>
+  <div class="nav-right">
+    <a href="login.html" class="btn-ghost">Entrar</a>
+    <a href="login.html#register" class="btn-solid">Registrarse</a>
+  </div>
+</nav>
+
+<div class="doc-wrap">
+
+  <div class="doc-tabs">
+    <button class="doc-tab active" onclick="showDoc('privacy',this)">Política de Privacidad</button>
+    <button class="doc-tab" onclick="showDoc('terms',this)">Términos de Uso</button>
+    <button class="doc-tab" onclick="showDoc('cookies',this)">Cookies</button>
+  </div>
+
+  <!-- PRIVACY -->
+  <div class="doc-panel active" id="doc-privacy">
+    <div class="doc-title">Política de Privacidad</div>
+    <div class="doc-date">Última actualización: Junio 2025 · Versión 1.0</div>
+
+    <div class="doc-highlight">
+      <p><b>Resumen simple:</b> VEX OS guarda tu información solo en tu dispositivo (localStorage). No tenemos servidores propios que almacenen tus datos. No vendemos ni compartimos tu información con terceros.</p>
+    </div>
+
+    <div class="toc">
+      <h3>Contenido</h3>
+      <a href="#p1">1. Qué información recopilamos</a>
+      <a href="#p2">2. Cómo usamos tu información</a>
+      <a href="#p3">3. Almacenamiento local</a>
+      <a href="#p4">4. Servicios de terceros</a>
+      <a href="#p5">5. Menores de edad</a>
+      <a href="#p6">6. Tus derechos</a>
+      <a href="#p7">7. Contacto</a>
+    </div>
+
+    <div class="doc-section" id="p1">
+      <div class="doc-h2">1. Qué información recopilamos</div>
+      <div class="doc-p">Cuando creas una cuenta en VEX OS, recopilamos la siguiente información:</div>
+      <ul class="doc-ul">
+        <li><b>Username y contraseña</b> — almacenados localmente en tu dispositivo con hash simple.</li>
+        <li><b>Edad y país</b> — para verificación de edad mínima y mostrar contenido regionalizado.</li>
+        <li><b>Información de perfil</b> — nombre, bio, foto, juegos favoritos, música. Todo opcional.</li>
+        <li><b>Links de redes sociales</b> — que eliges agregar voluntariamente a tu perfil.</li>
+        <li><b>Mensajes de chat</b> — almacenados localmente en tu dispositivo.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="p2">
+      <div class="doc-h2">2. Cómo usamos tu información</div>
+      <div class="doc-p">Tu información se usa exclusivamente para:</div>
+      <ul class="doc-ul">
+        <li>Mostrar tu perfil gamer a otros usuarios.</li>
+        <li>Calcular compatibilidad con otros jugadores (juegos, región, horario).</li>
+        <li>Personalizar tu experiencia dentro de la app.</li>
+        <li>Verificar que cumples la edad mínima requerida (14 años).</li>
+      </ul>
+      <div class="doc-p"><b>No usamos tu información para:</b> publicidad dirigida, venta a terceros, perfilado comercial ni análisis de comportamiento externo.</div>
+    </div>
+
+    <div class="doc-section" id="p3">
+      <div class="doc-h2">3. Almacenamiento local (localStorage)</div>
+      <div class="doc-p">VEX OS utiliza el localStorage del navegador para guardar todos tus datos. Esto significa:</div>
+      <ul class="doc-ul">
+        <li>Tus datos viven en tu dispositivo, no en servidores externos.</li>
+        <li>Si limpias el caché o los datos del navegador, perderás tu información.</li>
+        <li>Los datos no se sincronizan entre dispositivos (por ahora).</li>
+        <li>No tienes que preocuparte por filtraciones de datos en servidores.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="p4">
+      <div class="doc-h2">4. Servicios de terceros</div>
+      <div class="doc-p">VEX OS integra servicios de terceros. Al usar estas integraciones, aceptas sus propias políticas:</div>
+      <ul class="doc-ul">
+        <li><b>Spotify</b> — Para mostrar tu perfil o playlist. <a href="https://www.spotify.com/legal/privacy-policy/" target="_blank" style="color:var(--muted);text-decoration:underline;">Ver política de Spotify</a></li>
+        <li><b>Google Fonts</b> — Para cargar tipografías. Solo carga fuentes, no registra datos de usuario.</li>
+        <li><b>Discord, YouTube, Kick, TikTok, Steam, Roblox</b> — Solo si agregas voluntariamente links a estas plataformas.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="p5">
+      <div class="doc-h2">5. Menores de edad</div>
+      <div class="doc-p">VEX OS requiere una edad mínima de <b>14 años</b> para crear una cuenta. Si detectamos que un usuario es menor de esta edad, la cuenta será suspendida. Los padres o tutores pueden contactarnos para solicitar la eliminación de datos.</div>
+    </div>
+
+    <div class="doc-section" id="p6">
+      <div class="doc-h2">6. Tus derechos</div>
+      <ul class="doc-ul">
+        <li><b>Acceso:</b> Puedes ver toda tu información en Configuración → Perfil.</li>
+        <li><b>Edición:</b> Puedes editar tu información en cualquier momento desde tu perfil.</li>
+        <li><b>Eliminación:</b> Puedes eliminar tu cuenta desde Configuración → Zona peligrosa.</li>
+        <li><b>Exportación:</b> Tus datos están en localStorage y puedes acceder a ellos desde las DevTools del navegador.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section" id="p7">
+      <div class="doc-h2">7. Contacto</div>
+      <div class="doc-p">Para dudas sobre privacidad, contáctanos a través del servidor de Discord oficial: <a href="https://discord.gg/yXXG7jmvq4" target="_blank" style="color:var(--accent);">discord.gg/yXXG7jmvq4</a></div>
+    </div>
+  </div>
+
+  <!-- TERMS -->
+  <div class="doc-panel" id="doc-terms">
+    <div class="doc-title">Términos de Uso</div>
+    <div class="doc-date">Última actualización: Junio 2025 · Versión 1.0</div>
+
+    <div class="doc-highlight">
+      <p><b>Al usar VEX OS aceptas estos términos.</b> Si no los aceptas, no debes usar la plataforma. Debes tener al menos <b>14 años</b> para crear una cuenta.</p>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">1. Uso aceptable</div>
+      <div class="doc-p">Al usar VEX OS te comprometes a:</div>
+      <ul class="doc-ul">
+        <li>Proporcionar información veraz al crear tu perfil.</li>
+        <li>No hacerte pasar por otra persona o entidad.</li>
+        <li>No usar la plataforma para actividades ilegales.</li>
+        <li>Respetar las <a href="rules.html" style="color:var(--accent);">Reglas de Comunidad</a>.</li>
+        <li>No intentar vulnerar la seguridad de la plataforma.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">2. Contenido del usuario</div>
+      <div class="doc-p">Eres responsable de todo el contenido que publiques en VEX OS (clips, bio, links, mensajes). VEX OS se reserva el derecho de eliminar contenido que viole las reglas de la comunidad o la ley aplicable.</div>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">3. Propiedad intelectual</div>
+      <div class="doc-p">VEX OS y su diseño son propiedad de sus creadores. Los logos de juegos y plataformas de terceros pertenecen a sus respectivos dueños. Al subir contenido a VEX OS, garantizas que tienes los derechos para publicarlo.</div>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">4. Limitación de responsabilidad</div>
+      <div class="doc-p">VEX OS se proporciona "tal cual". No garantizamos disponibilidad ininterrumpida ni ausencia de errores. No somos responsables de pérdida de datos derivada del uso del localStorage.</div>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">5. Modificaciones</div>
+      <div class="doc-p">Nos reservamos el derecho de modificar estos términos. Los cambios importantes serán notificados en el Discord oficial. Continuar usando VEX OS tras los cambios implica su aceptación.</div>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">6. Terminación</div>
+      <div class="doc-p">Podemos suspender o eliminar cuentas que violen estos términos o las reglas de comunidad, sin previo aviso en casos graves.</div>
+    </div>
+  </div>
+
+  <!-- COOKIES -->
+  <div class="doc-panel" id="doc-cookies">
+    <div class="doc-title">Política de Cookies</div>
+    <div class="doc-date">Última actualización: Junio 2025</div>
+
+    <div class="doc-highlight">
+      <p><b>VEX OS no usa cookies propias.</b> Usamos localStorage del navegador para guardar tu sesión y preferencias. Algunos servicios de terceros integrados pueden usar sus propias cookies.</p>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">¿Qué usamos en lugar de cookies?</div>
+      <div class="doc-p">En lugar de cookies, VEX OS usa <b>localStorage</b> del navegador para:</div>
+      <ul class="doc-ul">
+        <li><code style="background:var(--s2);padding:1px 6px;border-radius:4px;font-size:12px;">vex_user</code> — Datos de sesión activa</li>
+        <li><code style="background:var(--s2);padding:1px 6px;border-radius:4px;font-size:12px;">vex_profile</code> — Tu perfil gamer</li>
+        <li><code style="background:var(--s2);padding:1px 6px;border-radius:4px;font-size:12px;">vex_accounts</code> — Cuentas registradas en este dispositivo</li>
+        <li><code style="background:var(--s2);padding:1px 6px;border-radius:4px;font-size:12px;">vex_chat_*</code> — Mensajes de chat por conversación</li>
+        <li><code style="background:var(--s2);padding:1px 6px;border-radius:4px;font-size:12px;">vex_matches</code> — Tus matches del sistema de dúos</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">Cookies de terceros</div>
+      <ul class="doc-ul">
+        <li><b>Spotify Embed</b> — Puede establecer cookies propias de Spotify al cargar el widget de música.</li>
+        <li><b>Google Fonts</b> — Puede registrar solicitudes de fuentes (sin identificación de usuario).</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-h2">Cómo limpiar tus datos</div>
+      <div class="doc-p">Para eliminar todos tus datos locales: Ve a <a href="settings.html" style="color:var(--accent);">Configuración → Zona peligrosa → Eliminar cuenta</a>, o limpia el localStorage desde las DevTools de tu navegador (F12 → Application → Local Storage).</div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div style="max-width:720px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div style="font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);">VEX OS</div>
+    <div style="display:flex;gap:20px;">
+      <a href="rules.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Reglas</a>
+      <a href="creators.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Creadores</a>
+      <a href="index.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Inicio</a>
+    </div>
+    <div style="font-size:11px;color:var(--muted2);">© 2025 VEX OS</div>
+  </div>
+</footer>
+
+<script>/* ============================================================
+   VEX OS — auth.js
+   Login, register, session helpers
+============================================================ */
+
+function hashSimple(s){
+  let h=0;
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xFFFFFF;
+  return h.toString(16);
+}
+
+function getAccounts(){ return JSON.parse(localStorage.getItem('vex_accounts')||'{}'); }
+function setAccounts(a){ localStorage.setItem('vex_accounts',JSON.stringify(a)); }
+function getSession(){ return JSON.parse(localStorage.getItem('vex_user')||'null'); }
+function setSession(u){ localStorage.setItem('vex_user',JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem('vex_user'); }
+function isLoggedIn(){ return !!getSession(); }
+
+function doLogin(user, pass, errEl){
+  user=user.trim().toLowerCase();
+  if(!user||!pass){ showErr(errEl,'Completa todos los campos'); return false; }
+  const accounts=getAccounts();
+  if(!accounts[user]){ showErr(errEl,'Usuario no encontrado'); return false; }
+  if(accounts[user].passHash!==hashSimple(pass)){ showErr(errEl,'Contraseña incorrecta'); return false; }
+  setSession(accounts[user]);
+  // Sync vex_profile with account data
+  localStorage.setItem('vex_profile', JSON.stringify(accounts[user].profile||{}));
+  return true;
+}
+
+function doRegister(data, errEl){
+  const {username, pass, age, country, lang, schedule}=data;
+  const key=username.trim().toLowerCase();
+  if(!key||!pass||!age||!country){ showErr(errEl,'Completa todos los campos'); return false; }
+  if(isNaN(age)||parseInt(age)<14){ showErr(errEl,'Debes tener al menos 14 años'); return false; }
+  if(pass.length<6){ showErr(errEl,'Contraseña mínimo 6 caracteres'); return false; }
+  if(!/^[a-zA-Z0-9_]+$/.test(key)){ showErr(errEl,'Username: solo letras, números y _'); return false; }
+  const accounts=getAccounts();
+  if(accounts[key]){ showErr(errEl,'Username ya en uso'); return false; }
+
+  const profile={
+    name: username, username: key, bio:'', country, lang, schedule,
+    status:'online', avatar:'', games:[], music:[], socials:{}, setupDone:false
+  };
+  const account={ username:key, passHash:hashSimple(pass), age:parseInt(age), createdAt:Date.now(), profile };
+  accounts[key]=account;
+  setAccounts(accounts);
+  setSession(account);
+  localStorage.setItem('vex_profile', JSON.stringify(profile));
+  return true;
+}
+
+function showErr(el, msg){
+  if(!el) return;
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4000);
+}
+
+function requireAuth(redirect='login.html'){
+  if(!isLoggedIn()) window.location.href=redirect;
+}
+
+function logout(){
+  clearSession();
+  window.location.href='index.html';
+}
+
+// Spawn background particles (shared utility)
+function spawnParticles(containerId='ambient', count=20){
+  const amb=document.getElementById(containerId);
+  if(!amb) return;
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div'); s.className='speck';
+    s.style.left=Math.random()*100+'vw';
+    s.style.setProperty('--dx',(Math.random()*60-30)+'px');
+    s.style.animationDuration=(12+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    amb.appendChild(s);
+  }
+}
+</script>
+<script>
+spawnParticles('ambient', 12);
+function showDoc(id, el){
+  document.querySelectorAll('.doc-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.doc-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('doc-'+id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

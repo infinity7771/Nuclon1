@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEX OS · Torneos</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>/* ============================================================
+   VEX OS — shared.css
+   Estilos compartidos para páginas fuera del iPhone
+============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;}
+*::-webkit-scrollbar{display:none;}
+
+:root{
+  --bg:#090909;
+  --s1:#111116;
+  --s2:#18181f;
+  --line:#24242b;
+  --line2:#2e2e38;
+  --ink:#F2F0EB;
+  --muted:#6a6a72;
+  --muted2:#3e3e47;
+  --accent:#D9D4C7;
+  --green:#3d9970;
+  --yellow:#c8a84b;
+  --red:#c0392b;
+  --nav-h:64px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Geist',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ---- Partículas ---- */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.speck{
+  position:absolute;bottom:-4px;width:1.5px;height:1.5px;border-radius:50%;
+  background:rgba(242,240,235,0.15);animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:1;}90%{opacity:1;}
+  100%{transform:translateY(-110vh) translateX(var(--dx,20px));opacity:0;}
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(9,9,9,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;z-index:100;
+}
+.nav-logo{
+  font-size:18px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink);text-decoration:none;
+}
+.nav-links{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-links a{
+  font-size:12px;font-weight:500;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;transition:.2s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--ink);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+.nav-cta{
+  display:flex;align-items:center;gap:10px;
+}
+.btn-nav-ghost{
+  padding:8px 18px;border:1px solid var(--line);border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;transition:.2s;letter-spacing:.06em;
+  background:transparent;cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-ghost:hover{border-color:var(--line2);color:var(--ink);}
+.btn-nav-solid{
+  padding:8px 18px;background:var(--accent);border:none;border-radius:10px;
+  font-size:12px;font-weight:700;color:var(--bg);
+  text-decoration:none;transition:.15s;letter-spacing:.06em;
+  cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-solid:hover{opacity:.9;}
+
+/* Mobile nav toggle */
+.nav-mobile-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  color:var(--muted);padding:4px;
+}
+@media(max-width:700px){
+  .navbar{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-mobile-toggle{display:block;}
+}
+
+/* ============================================================
+   PAGE WRAPPER
+============================================================ */
+.page{
+  padding-top:var(--nav-h);
+  min-height:100vh;
+  position:relative;z-index:1;
+}
+
+/* ============================================================
+   COMMON SECTIONS
+============================================================ */
+.section{
+  max-width:1100px;
+  margin:0 auto;
+  padding:80px 40px;
+}
+@media(max-width:700px){.section{padding:60px 20px;}}
+
+.section-label{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.section-title{
+  font-size:clamp(28px,5vw,48px);font-weight:800;
+  letter-spacing:-.02em;line-height:1.15;color:var(--ink);
+  margin-bottom:14px;
+}
+.section-sub{
+  font-size:16px;color:var(--muted);line-height:1.7;
+  max-width:560px;
+}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--line);margin:0;}
+
+/* Cards */
+.card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+}
+.card:hover{border-color:var(--line2);}
+
+/* ============================================================
+   BUTTONS (full-page)
+============================================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:12px;
+  font-size:13px;font-weight:700;letter-spacing:.08em;
+  font-family:'Geist',sans-serif;cursor:pointer;
+  text-decoration:none;transition:.15s;border:none;
+}
+.btn-primary{background:var(--accent);color:var(--bg);}
+.btn-primary:hover{opacity:.9;}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--line2);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer{
+  border-top:1px solid var(--line);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+  position:relative;z-index:1;
+}
+.footer-logo{font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:.2s;}
+.footer-links a:hover{color:var(--ink);}
+.footer-copy{font-size:10px;color:var(--muted2);letter-spacing:.06em;}
+@media(max-width:600px){.footer{padding:24px 20px;flex-direction:column;text-align:center;}}
+
+/* ============================================================
+   FORM INPUTS (login, etc)
+============================================================ */
+.form-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:20px;padding:32px;width:100%;max-width:420px;
+}
+.form-field{margin-bottom:16px;}
+.form-field label{
+  display:block;font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:7px;
+}
+.form-field input,.form-field select{
+  width:100%;background:var(--s2);border:1px solid var(--line);
+  border-radius:10px;padding:13px 16px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--line2);}
+.form-tabs{
+  display:flex;background:var(--s2);border:1px solid var(--line);
+  border-radius:12px;padding:4px;margin-bottom:24px;gap:4px;
+}
+.form-tab{
+  flex:1;padding:9px;border:none;background:transparent;
+  font-family:'Geist',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;color:var(--muted);cursor:pointer;
+  border-radius:9px;transition:.2s;
+}
+.form-tab.active{background:var(--s1);color:var(--ink);border:1px solid var(--line);}
+.form-error{
+  font-size:11px;color:var(--red);display:none;
+  padding:8px 12px;background:rgba(192,57,43,.08);
+  border:1px solid rgba(192,57,43,.25);border-radius:8px;margin-bottom:12px;
+}
+.form-error.show{display:block;}
+.form-note{
+  font-size:10px;color:var(--muted);line-height:1.6;
+  margin-top:16px;padding:12px;background:var(--s2);
+  border:1px solid var(--line);border-radius:10px;
+}
+.form-note b{color:var(--muted2);}
+
+/* ============================================================
+   DASHBOARD LAYOUT
+============================================================ */
+.app-layout{
+  display:flex;min-height:calc(100vh - var(--nav-h));
+  padding-top:var(--nav-h);
+}
+.sidebar{
+  width:220px;flex-shrink:0;
+  border-right:1px solid var(--line);
+  padding:24px 16px;
+  position:fixed;top:var(--nav-h);left:0;bottom:0;
+  overflow-y:auto;background:var(--bg);z-index:40;
+}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px;}
+.sidebar-link{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:.15s;cursor:pointer;border:none;background:none;width:100%;
+  font-family:'Geist',sans-serif;
+}
+.sidebar-link:hover{background:var(--s1);color:var(--ink);}
+.sidebar-link.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.sidebar-link svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.sidebar-link .badge-count{
+  margin-left:auto;font-size:9px;background:var(--accent);
+  color:var(--bg);border-radius:20px;padding:2px 7px;font-weight:700;
+}
+.main-content{
+  margin-left:220px;flex:1;padding:32px;
+  max-width:calc(100vw - 220px);
+}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main-content{margin-left:0;max-width:100%;padding:20px;}
+}
+
+/* ============================================================
+   PROFILE CARDS
+============================================================ */
+.profile-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;transition:.2s;cursor:pointer;
+}
+.profile-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.pc-banner{height:60px;background:linear-gradient(135deg,var(--s2),var(--line));position:relative;}
+.pc-av{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--bg);
+  position:absolute;bottom:-26px;left:16px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
+}
+.pc-av img{width:100%;height:100%;object-fit:cover;}
+.pc-body{padding:34px 16px 16px;}
+.pc-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;}
+.pc-handle{font-size:11px;color:var(--muted);margin-top:2px;}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0;}
+.pc-tag{font-size:9px;padding:3px 8px;border-radius:20px;background:var(--s2);border:1px solid var(--line);color:var(--muted);}
+.pc-games{display:flex;gap:4px;margin-top:8px;}
+.pc-game{width:28px;height:28px;border-radius:8px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pc-footer{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.pc-compat{font-size:12px;font-weight:700;color:var(--accent);}
+.pc-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.pc-dot{width:6px;height:6px;border-radius:50%;}
+.pc-dot.online{background:var(--green);}
+.pc-dot.away{background:var(--yellow);}
+.pc-dot.offline{background:var(--muted2);}
+
+/* ============================================================
+   STAT CARDS
+============================================================ */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:800px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:18px 20px;
+}
+.sc-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sc-value{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.sc-trend{font-size:11px;color:var(--green);margin-top:4px;}
+
+/* ============================================================
+   ACTIVITY FEED
+============================================================ */
+.activity-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.act-content{flex:1;min-width:0;}
+.act-text{font-size:13px;color:var(--ink);line-height:1.4;}
+.act-time{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+
+/* ============================================================
+   SEARCH & FILTERS
+============================================================ */
+.search-bar{
+  display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+}
+.search-input-wrap{
+  flex:1;min-width:200px;position:relative;
+}
+.search-input-wrap svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--muted);
+}
+.search-input{
+  width:100%;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px 12px 40px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;outline:none;transition:.2s;
+}
+.search-input:focus{border-color:var(--line2);}
+.filter-btn{
+  padding:11px 16px;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;font-size:12px;color:var(--muted);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;white-space:nowrap;
+}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--ink);}
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+.sec-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.sec-header h2{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+.sec-header a{font-size:12px;color:var(--muted);text-decoration:none;transition:.2s;}
+.sec-header a:hover{color:var(--ink);}
+
+/* ============================================================
+   SETTINGS
+============================================================ */
+.settings-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-info .settings-title{font-size:13px;color:var(--ink);font-weight:500;}
+.settings-info .settings-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.toggle{
+  width:44px;height:24px;border-radius:12px;background:var(--line);
+  border:none;cursor:pointer;position:relative;transition:.2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green);}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;background:white;
+  transition:transform .2s;
+}
+.toggle.on::after{transform:translateX(20px);}
+.danger-zone{
+  background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);
+  border-radius:16px;padding:20px;margin-top:24px;
+}
+.danger-zone h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:14px;}
+.btn-danger{
+  padding:10px 20px;background:transparent;border:1px solid var(--red);
+  border-radius:10px;font-size:12px;color:var(--red);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;
+}
+.btn-danger:hover{background:rgba(192,57,43,.1);}
+</style>
+<style>
+.page-wrap{max-width:1000px;margin:0 auto;padding:88px 24px 60px;}
+@media(max-width:700px){.page-wrap{padding:76px 16px 40px;}}
+
+/* Hero banner */
+.tourn-hero{
+  background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 100%);
+  border:1px solid var(--line);border-radius:20px;
+  padding:40px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden;
+}
+.tourn-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 100%,rgba(217,212,199,.06) 0%,transparent 60%);pointer-events:none;}
+.tourn-hero-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:1px solid var(--line);border-radius:20px;font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;}
+.tourn-hero-tag span{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.tourn-hero h1{font-size:clamp(30px,5vw,48px);font-weight:900;color:var(--ink);letter-spacing:-.03em;margin-bottom:10px;}
+.tourn-hero p{font-size:15px;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.7;}
+.tourn-hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* Countdown */
+.countdown{
+  display:flex;gap:16px;justify-content:center;margin-bottom:32px;
+  flex-wrap:wrap;
+}
+.cd-item{
+  background:var(--s1);border:1px solid var(--line);border-radius:14px;
+  padding:14px 20px;text-align:center;min-width:70px;
+}
+.cd-num{font-size:28px;font-weight:900;color:var(--ink);letter-spacing:-.02em;}
+.cd-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+
+/* Tournament cards */
+.tourn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:32px;}
+.tourn-card{
+  background:var(--s1);border:1px solid var(--line);border-radius:20px;
+  overflow:hidden;transition:.2s;
+}
+.tourn-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.tourn-card-banner{
+  height:80px;
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+  background:linear-gradient(135deg,var(--s2) 0%,var(--line) 100%);
+  position:relative;
+}
+.tourn-card-status{
+  position:absolute;top:10px;right:10px;
+  padding:4px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.1em;
+}
+.tourn-card-status.live{background:rgba(61,153,112,.15);border:1px solid rgba(61,153,112,.4);color:var(--green);}
+.tourn-card-status.upcoming{background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.3);color:var(--yellow);}
+.tourn-card-status.ended{background:var(--s2);border:1px solid var(--line);color:var(--muted2);}
+.tourn-card-body{padding:18px;}
+.tourn-card-game{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.tourn-card-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.tourn-card-date{font-size:12px;color:var(--muted);margin-bottom:14px;}
+.tourn-card-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.tourn-meta-chip{padding:4px 10px;border-radius:20px;background:var(--s2);border:1px solid var(--line);font-size:10px;color:var(--muted);}
+.tourn-card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--line);}
+.tourn-prize{font-size:13px;font-weight:700;color:var(--accent);}
+.tourn-prize-label{font-size:9px;color:var(--muted);letter-spacing:.08em;margin-top:1px;}
+.tourn-btn{padding:9px 18px;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.06em;cursor:pointer;font-family:'Geist',sans-serif;transition:.15s;}
+.tourn-btn.primary{background:var(--accent);border:none;color:#090909;}
+.tourn-btn.primary:hover{opacity:.9;}
+.tourn-btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);}
+.tourn-btn.ghost:hover{border-color:var(--line2);color:var(--ink);}
+.tourn-btn.disabled{background:var(--s2);border:1px solid var(--line);color:var(--muted2);cursor:not-allowed;}
+
+/* Participants bar */
+.participants-bar{margin:10px 0;}
+.participants-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px;}
+.participants-track{height:4px;background:var(--s2);border-radius:2px;overflow:hidden;}
+.participants-fill{height:100%;background:var(--accent);border-radius:2px;}
+
+/* Leaderboard mini */
+.tourn-results{background:var(--s1);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+.tourn-results-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.tourn-results-head h3{font-size:14px;font-weight:600;color:var(--ink);}
+.result-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);}
+.result-row:last-child{border-bottom:none;}
+.result-pos{font-size:16px;font-weight:900;color:var(--muted2);width:28px;text-align:center;flex-shrink:0;}
+.result-pos.g{color:var(--yellow);}
+.result-pos.s{color:var(--ink);}
+.result-pos.b{color:#c87941;}
+.result-av{width:34px;height:34px;border-radius:50%;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.result-info{flex:1;}
+.result-name{font-size:13px;font-weight:600;color:var(--ink);}
+.result-score{font-size:11px;color:var(--muted);margin-top:2px;}
+.result-prize{font-size:13px;font-weight:700;color:var(--accent);}
+
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s1);border:1px solid var(--line);border-radius:20px;padding:9px 18px;font-size:12px;color:var(--ink);white-space:nowrap;opacity:0;transition:.3s;pointer-events:none;z-index:200;}
+</style>
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;"><div class="nav-logo-dot"></div>VEX OS</a>
+  <div class="nav-center">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="explore.html">Explorar</a>
+    <a href="matchmaking.html">Buscar Dúo</a>
+    <a href="tournaments.html" style="color:var(--ink);">Torneos</a>
+  </div>
+  <div class="nav-right">
+    <a href="app.html" class="btn-ghost">Mi perfil</a>
+    <a href="dashboard.html" class="btn-solid">Dashboard</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- Hero -->
+  <div class="tourn-hero">
+    <div class="tourn-hero-tag"><span></span>Torneos activos ahora</div>
+    <h1>🏆 Torneos VEX OS</h1>
+    <p>Compite contra los mejores jugadores de LATAM. Gana insignias exclusivas, puntos y reconocimiento en el leaderboard.</p>
+    <div class="tourn-hero-btns">
+      <button class="btn btn-primary" onclick="toast('Registro de torneos · Próximamente 🚀')">VER TORNEOS ACTIVOS</button>
+      <a href="clan.html" class="btn btn-outline">Crear equipo →</a>
+    </div>
+  </div>
+
+  <!-- Countdown to next tournament -->
+  <div style="text-align:center;margin-bottom:12px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);">Próximo torneo en</div>
+  <div class="countdown">
+    <div class="cd-item"><div class="cd-num" id="cdDays">02</div><div class="cd-label">Días</div></div>
+    <div class="cd-item"><div class="cd-num" id="cdHours">14</div><div class="cd-label">Horas</div></div>
+    <div class="cd-item"><div class="cd-num" id="cdMins">37</div><div class="cd-label">Min</div></div>
+    <div class="cd-item"><div class="cd-num" id="cdSecs">00</div><div class="cd-label">Seg</div></div>
+  </div>
+
+  <!-- Active + Upcoming tournaments -->
+  <div style="font-size:18px;font-weight:700;color:var(--ink);margin-bottom:16px;">Activos y próximos</div>
+  <div class="tourn-grid">
+
+    <div class="tourn-card">
+      <div class="tourn-card-banner">🎯<div class="tourn-card-status live">🔴 EN VIVO</div></div>
+      <div class="tourn-card-body">
+        <div class="tourn-card-game">Valorant</div>
+        <div class="tourn-card-name">VEX Cup #3 — Diamante+</div>
+        <div class="tourn-card-date">📅 Hoy · Empezó hace 2h</div>
+        <div class="participants-bar">
+          <div class="participants-row"><span>Participantes</span><span>28/32</span></div>
+          <div class="participants-track"><div class="participants-fill" style="width:87%"></div></div>
+        </div>
+        <div class="tourn-card-meta">
+          <div class="tourn-meta-chip">5v5</div>
+          <div class="tourn-meta-chip">🌎 LATAM</div>
+          <div class="tourn-meta-chip">Diamante+</div>
+          <div class="tourn-meta-chip">🗣 ES</div>
+        </div>
+        <div class="tourn-card-footer">
+          <div><div class="tourn-prize">🏅 Insignia exclusiva</div><div class="tourn-prize-label">+ 500 XP al ganador</div></div>
+          <button class="tourn-btn ghost" onclick="toast('Torneo en curso — puedes ver los resultados en vivo')">VER EN VIVO</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tourn-card">
+      <div class="tourn-card-banner">🔫<div class="tourn-card-status upcoming">📅 PRÓXIMO</div></div>
+      <div class="tourn-card-body">
+        <div class="tourn-card-game">CS2</div>
+        <div class="tourn-card-name">Open LATAM CS2 — Sábado</div>
+        <div class="tourn-card-date">📅 Sábado 28 Jun · 4:00 PM</div>
+        <div class="participants-bar">
+          <div class="participants-row"><span>Inscritos</span><span>14/32</span></div>
+          <div class="participants-track"><div class="participants-fill" style="width:43%"></div></div>
+        </div>
+        <div class="tourn-card-meta">
+          <div class="tourn-meta-chip">5v5</div>
+          <div class="tourn-meta-chip">🌎 LATAM</div>
+          <div class="tourn-meta-chip">Cualquier rango</div>
+        </div>
+        <div class="tourn-card-footer">
+          <div><div class="tourn-prize">💎 Badge + 300 XP</div><div class="tourn-prize-label">Inscripción gratuita</div></div>
+          <button class="tourn-btn primary" onclick="register('CS2 Open LATAM')">INSCRIBIRSE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tourn-card">
+      <div class="tourn-card-banner">🧱<div class="tourn-card-status upcoming">📅 PRÓXIMO</div></div>
+      <div class="tourn-card-body">
+        <div class="tourn-card-game">Roblox</div>
+        <div class="tourn-card-name">Roblox Battle Royale — Domingo</div>
+        <div class="tourn-card-date">📅 Domingo 29 Jun · 6:00 PM</div>
+        <div class="participants-bar">
+          <div class="participants-row"><span>Inscritos</span><span>8/64</span></div>
+          <div class="participants-track"><div class="participants-fill" style="width:12%"></div></div>
+        </div>
+        <div class="tourn-card-meta">
+          <div class="tourn-meta-chip">Solo</div>
+          <div class="tourn-meta-chip">🌎 Global</div>
+          <div class="tourn-meta-chip">Todas las edades</div>
+        </div>
+        <div class="tourn-card-footer">
+          <div><div class="tourn-prize">⚡ Badge + 200 XP</div><div class="tourn-prize-label">Inscripción gratuita</div></div>
+          <button class="tourn-btn primary" onclick="register('Roblox Battle Royale')">INSCRIBIRSE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tourn-card">
+      <div class="tourn-card-banner">🏗<div class="tourn-card-status upcoming">📅 PRÓXIMO</div></div>
+      <div class="tourn-card-body">
+        <div class="tourn-card-game">Fortnite</div>
+        <div class="tourn-card-name">VEX Duos Cup — Fortnite</div>
+        <div class="tourn-card-date">📅 Viernes 4 Jul · 7:00 PM</div>
+        <div class="participants-bar">
+          <div class="participants-row"><span>Dúos inscritos</span><span>4/16</span></div>
+          <div class="participants-track"><div class="participants-fill" style="width:25%"></div></div>
+        </div>
+        <div class="tourn-card-meta">
+          <div class="tourn-meta-chip">Dúos</div>
+          <div class="tourn-meta-chip">🌎 LATAM</div>
+          <div class="tourn-meta-chip">Cualquier rango</div>
+        </div>
+        <div class="tourn-card-footer">
+          <div><div class="tourn-prize">👑 Badge Campeón</div><div class="tourn-prize-label">+ 400 XP</div></div>
+          <button class="tourn-btn primary" onclick="register('Fortnite Duos Cup')">INSCRIBIRSE</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Past results -->
+  <div style="font-size:18px;font-weight:700;color:var(--ink);margin-bottom:16px;margin-top:8px;">Resultados recientes</div>
+  <div class="tourn-results">
+    <div class="tourn-results-head">
+      <h3>🎯 VEX Cup #2 — Valorant · 22 Jun</h3>
+      <span style="font-size:11px;color:var(--muted);">32 equipos</span>
+    </div>
+    <div class="result-row">
+      <div class="result-pos g">🥇</div>
+      <div class="result-av">⚡</div>
+      <div class="result-info"><div class="result-name">APEX SQUAD</div><div class="result-score">12-0 · 47 kills totales</div></div>
+      <div class="result-prize">🏅 Campeón</div>
+    </div>
+    <div class="result-row">
+      <div class="result-pos s">🥈</div>
+      <div class="result-av">🔫</div>
+      <div class="result-info"><div class="result-name">DARK FORCES</div><div class="result-score">11-1 · 41 kills totales</div></div>
+      <div class="result-prize">💎 Sub-campeón</div>
+    </div>
+    <div class="result-row">
+      <div class="result-pos b">🥉</div>
+      <div class="result-av">🌆</div>
+      <div class="result-info"><div class="result-name">ZEPH SQUAD</div><div class="result-score">9-3 · 38 kills totales</div></div>
+      <div class="result-prize">⭐ 3er lugar</div>
+    </div>
+    <div class="result-row">
+      <div class="result-pos" style="color:var(--muted2);">4</div>
+      <div class="result-av">🏆</div>
+      <div class="result-info"><div class="result-name">LATAM PROS</div><div class="result-score">8-4</div></div>
+      <div class="result-prize" style="color:var(--muted);">Top 4</div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div style="font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);">VEX OS</div>
+    <div style="display:flex;gap:20px;">
+      <a href="rules.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Reglas</a>
+      <a href="creators.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Creadores</a>
+      <a href="privacy.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Privacidad</a>
+    </div>
+    <div style="font-size:11px;color:var(--muted2);">© 2025 VEX OS</div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>/* ============================================================
+   VEX OS — auth.js
+   Login, register, session helpers
+============================================================ */
+
+function hashSimple(s){
+  let h=0;
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xFFFFFF;
+  return h.toString(16);
+}
+
+function getAccounts(){ return JSON.parse(localStorage.getItem('vex_accounts')||'{}'); }
+function setAccounts(a){ localStorage.setItem('vex_accounts',JSON.stringify(a)); }
+function getSession(){ return JSON.parse(localStorage.getItem('vex_user')||'null'); }
+function setSession(u){ localStorage.setItem('vex_user',JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem('vex_user'); }
+function isLoggedIn(){ return !!getSession(); }
+
+function doLogin(user, pass, errEl){
+  user=user.trim().toLowerCase();
+  if(!user||!pass){ showErr(errEl,'Completa todos los campos'); return false; }
+  const accounts=getAccounts();
+  if(!accounts[user]){ showErr(errEl,'Usuario no encontrado'); return false; }
+  if(accounts[user].passHash!==hashSimple(pass)){ showErr(errEl,'Contraseña incorrecta'); return false; }
+  setSession(accounts[user]);
+  // Sync vex_profile with account data
+  localStorage.setItem('vex_profile', JSON.stringify(accounts[user].profile||{}));
+  return true;
+}
+
+function doRegister(data, errEl){
+  const {username, pass, age, country, lang, schedule}=data;
+  const key=username.trim().toLowerCase();
+  if(!key||!pass||!age||!country){ showErr(errEl,'Completa todos los campos'); return false; }
+  if(isNaN(age)||parseInt(age)<14){ showErr(errEl,'Debes tener al menos 14 años'); return false; }
+  if(pass.length<6){ showErr(errEl,'Contraseña mínimo 6 caracteres'); return false; }
+  if(!/^[a-zA-Z0-9_]+$/.test(key)){ showErr(errEl,'Username: solo letras, números y _'); return false; }
+  const accounts=getAccounts();
+  if(accounts[key]){ showErr(errEl,'Username ya en uso'); return false; }
+
+  const profile={
+    name: username, username: key, bio:'', country, lang, schedule,
+    status:'online', avatar:'', games:[], music:[], socials:{}, setupDone:false
+  };
+  const account={ username:key, passHash:hashSimple(pass), age:parseInt(age), createdAt:Date.now(), profile };
+  accounts[key]=account;
+  setAccounts(accounts);
+  setSession(account);
+  localStorage.setItem('vex_profile', JSON.stringify(profile));
+  return true;
+}
+
+function showErr(el, msg){
+  if(!el) return;
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4000);
+}
+
+function requireAuth(redirect='login.html'){
+  if(!isLoggedIn()) window.location.href=redirect;
+}
+
+function logout(){
+  clearSession();
+  window.location.href='index.html';
+}
+
+// Spawn background particles (shared utility)
+function spawnParticles(containerId='ambient', count=20){
+  const amb=document.getElementById(containerId);
+  if(!amb) return;
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div'); s.className='speck';
+    s.style.left=Math.random()*100+'vw';
+    s.style.setProperty('--dx',(Math.random()*60-30)+'px');
+    s.style.animationDuration=(12+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    amb.appendChild(s);
+  }
+}
+</script>
+<script>
+spawnParticles('ambient', 14);
+
+/* Countdown to next Saturday 4pm */
+function updateCountdown(){
+  const now   = new Date();
+  const next  = new Date();
+  next.setDate(now.getDate() + ((6 - now.getDay() + 7) % 7 || 7));
+  next.setHours(16,0,0,0);
+  const diff  = next - now;
+  const days  = Math.floor(diff/86400000);
+  const hours = Math.floor((diff%86400000)/3600000);
+  const mins  = Math.floor((diff%3600000)/60000);
+  const secs  = Math.floor((diff%60000)/1000);
+  document.getElementById('cdDays').textContent  = String(days).padStart(2,'0');
+  document.getElementById('cdHours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cdMins').textContent  = String(mins).padStart(2,'0');
+  document.getElementById('cdSecs').textContent  = String(secs).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown,1000);
+
+function register(name){
+  if(!isLoggedIn()){ window.location.href='login.html#register'; return; }
+  toast(`✓ Inscrito en ${name} — te avisaremos por notificaciones`);
+}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) translateY(10px)';},2600);
+}
+</script>
+</body>
+</html>

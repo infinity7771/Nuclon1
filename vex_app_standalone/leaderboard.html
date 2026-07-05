@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEX OS · Leaderboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>/* ============================================================
+   VEX OS — shared.css
+   Estilos compartidos para páginas fuera del iPhone
+============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;}
+*::-webkit-scrollbar{display:none;}
+
+:root{
+  --bg:#090909;
+  --s1:#111116;
+  --s2:#18181f;
+  --line:#24242b;
+  --line2:#2e2e38;
+  --ink:#F2F0EB;
+  --muted:#6a6a72;
+  --muted2:#3e3e47;
+  --accent:#D9D4C7;
+  --green:#3d9970;
+  --yellow:#c8a84b;
+  --red:#c0392b;
+  --nav-h:64px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Geist',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ---- Partículas ---- */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.speck{
+  position:absolute;bottom:-4px;width:1.5px;height:1.5px;border-radius:50%;
+  background:rgba(242,240,235,0.15);animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:1;}90%{opacity:1;}
+  100%{transform:translateY(-110vh) translateX(var(--dx,20px));opacity:0;}
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(9,9,9,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;z-index:100;
+}
+.nav-logo{
+  font-size:18px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink);text-decoration:none;
+}
+.nav-links{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-links a{
+  font-size:12px;font-weight:500;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;transition:.2s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--ink);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+.nav-cta{
+  display:flex;align-items:center;gap:10px;
+}
+.btn-nav-ghost{
+  padding:8px 18px;border:1px solid var(--line);border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;transition:.2s;letter-spacing:.06em;
+  background:transparent;cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-ghost:hover{border-color:var(--line2);color:var(--ink);}
+.btn-nav-solid{
+  padding:8px 18px;background:var(--accent);border:none;border-radius:10px;
+  font-size:12px;font-weight:700;color:var(--bg);
+  text-decoration:none;transition:.15s;letter-spacing:.06em;
+  cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-solid:hover{opacity:.9;}
+
+/* Mobile nav toggle */
+.nav-mobile-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  color:var(--muted);padding:4px;
+}
+@media(max-width:700px){
+  .navbar{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-mobile-toggle{display:block;}
+}
+
+/* ============================================================
+   PAGE WRAPPER
+============================================================ */
+.page{
+  padding-top:var(--nav-h);
+  min-height:100vh;
+  position:relative;z-index:1;
+}
+
+/* ============================================================
+   COMMON SECTIONS
+============================================================ */
+.section{
+  max-width:1100px;
+  margin:0 auto;
+  padding:80px 40px;
+}
+@media(max-width:700px){.section{padding:60px 20px;}}
+
+.section-label{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.section-title{
+  font-size:clamp(28px,5vw,48px);font-weight:800;
+  letter-spacing:-.02em;line-height:1.15;color:var(--ink);
+  margin-bottom:14px;
+}
+.section-sub{
+  font-size:16px;color:var(--muted);line-height:1.7;
+  max-width:560px;
+}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--line);margin:0;}
+
+/* Cards */
+.card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+}
+.card:hover{border-color:var(--line2);}
+
+/* ============================================================
+   BUTTONS (full-page)
+============================================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:12px;
+  font-size:13px;font-weight:700;letter-spacing:.08em;
+  font-family:'Geist',sans-serif;cursor:pointer;
+  text-decoration:none;transition:.15s;border:none;
+}
+.btn-primary{background:var(--accent);color:var(--bg);}
+.btn-primary:hover{opacity:.9;}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--line2);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer{
+  border-top:1px solid var(--line);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+  position:relative;z-index:1;
+}
+.footer-logo{font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:.2s;}
+.footer-links a:hover{color:var(--ink);}
+.footer-copy{font-size:10px;color:var(--muted2);letter-spacing:.06em;}
+@media(max-width:600px){.footer{padding:24px 20px;flex-direction:column;text-align:center;}}
+
+/* ============================================================
+   FORM INPUTS (login, etc)
+============================================================ */
+.form-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:20px;padding:32px;width:100%;max-width:420px;
+}
+.form-field{margin-bottom:16px;}
+.form-field label{
+  display:block;font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:7px;
+}
+.form-field input,.form-field select{
+  width:100%;background:var(--s2);border:1px solid var(--line);
+  border-radius:10px;padding:13px 16px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--line2);}
+.form-tabs{
+  display:flex;background:var(--s2);border:1px solid var(--line);
+  border-radius:12px;padding:4px;margin-bottom:24px;gap:4px;
+}
+.form-tab{
+  flex:1;padding:9px;border:none;background:transparent;
+  font-family:'Geist',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;color:var(--muted);cursor:pointer;
+  border-radius:9px;transition:.2s;
+}
+.form-tab.active{background:var(--s1);color:var(--ink);border:1px solid var(--line);}
+.form-error{
+  font-size:11px;color:var(--red);display:none;
+  padding:8px 12px;background:rgba(192,57,43,.08);
+  border:1px solid rgba(192,57,43,.25);border-radius:8px;margin-bottom:12px;
+}
+.form-error.show{display:block;}
+.form-note{
+  font-size:10px;color:var(--muted);line-height:1.6;
+  margin-top:16px;padding:12px;background:var(--s2);
+  border:1px solid var(--line);border-radius:10px;
+}
+.form-note b{color:var(--muted2);}
+
+/* ============================================================
+   DASHBOARD LAYOUT
+============================================================ */
+.app-layout{
+  display:flex;min-height:calc(100vh - var(--nav-h));
+  padding-top:var(--nav-h);
+}
+.sidebar{
+  width:220px;flex-shrink:0;
+  border-right:1px solid var(--line);
+  padding:24px 16px;
+  position:fixed;top:var(--nav-h);left:0;bottom:0;
+  overflow-y:auto;background:var(--bg);z-index:40;
+}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px;}
+.sidebar-link{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:.15s;cursor:pointer;border:none;background:none;width:100%;
+  font-family:'Geist',sans-serif;
+}
+.sidebar-link:hover{background:var(--s1);color:var(--ink);}
+.sidebar-link.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.sidebar-link svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.sidebar-link .badge-count{
+  margin-left:auto;font-size:9px;background:var(--accent);
+  color:var(--bg);border-radius:20px;padding:2px 7px;font-weight:700;
+}
+.main-content{
+  margin-left:220px;flex:1;padding:32px;
+  max-width:calc(100vw - 220px);
+}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main-content{margin-left:0;max-width:100%;padding:20px;}
+}
+
+/* ============================================================
+   PROFILE CARDS
+============================================================ */
+.profile-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;transition:.2s;cursor:pointer;
+}
+.profile-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.pc-banner{height:60px;background:linear-gradient(135deg,var(--s2),var(--line));position:relative;}
+.pc-av{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--bg);
+  position:absolute;bottom:-26px;left:16px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
+}
+.pc-av img{width:100%;height:100%;object-fit:cover;}
+.pc-body{padding:34px 16px 16px;}
+.pc-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;}
+.pc-handle{font-size:11px;color:var(--muted);margin-top:2px;}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0;}
+.pc-tag{font-size:9px;padding:3px 8px;border-radius:20px;background:var(--s2);border:1px solid var(--line);color:var(--muted);}
+.pc-games{display:flex;gap:4px;margin-top:8px;}
+.pc-game{width:28px;height:28px;border-radius:8px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pc-footer{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.pc-compat{font-size:12px;font-weight:700;color:var(--accent);}
+.pc-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.pc-dot{width:6px;height:6px;border-radius:50%;}
+.pc-dot.online{background:var(--green);}
+.pc-dot.away{background:var(--yellow);}
+.pc-dot.offline{background:var(--muted2);}
+
+/* ============================================================
+   STAT CARDS
+============================================================ */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:800px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:18px 20px;
+}
+.sc-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sc-value{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.sc-trend{font-size:11px;color:var(--green);margin-top:4px;}
+
+/* ============================================================
+   ACTIVITY FEED
+============================================================ */
+.activity-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.act-content{flex:1;min-width:0;}
+.act-text{font-size:13px;color:var(--ink);line-height:1.4;}
+.act-time{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+
+/* ============================================================
+   SEARCH & FILTERS
+============================================================ */
+.search-bar{
+  display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+}
+.search-input-wrap{
+  flex:1;min-width:200px;position:relative;
+}
+.search-input-wrap svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--muted);
+}
+.search-input{
+  width:100%;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px 12px 40px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;outline:none;transition:.2s;
+}
+.search-input:focus{border-color:var(--line2);}
+.filter-btn{
+  padding:11px 16px;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;font-size:12px;color:var(--muted);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;white-space:nowrap;
+}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--ink);}
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+.sec-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.sec-header h2{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+.sec-header a{font-size:12px;color:var(--muted);text-decoration:none;transition:.2s;}
+.sec-header a:hover{color:var(--ink);}
+
+/* ============================================================
+   SETTINGS
+============================================================ */
+.settings-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-info .settings-title{font-size:13px;color:var(--ink);font-weight:500;}
+.settings-info .settings-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.toggle{
+  width:44px;height:24px;border-radius:12px;background:var(--line);
+  border:none;cursor:pointer;position:relative;transition:.2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green);}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;background:white;
+  transition:transform .2s;
+}
+.toggle.on::after{transform:translateX(20px);}
+.danger-zone{
+  background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);
+  border-radius:16px;padding:20px;margin-top:24px;
+}
+.danger-zone h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:14px;}
+.btn-danger{
+  padding:10px 20px;background:transparent;border:1px solid var(--red);
+  border-radius:10px;font-size:12px;color:var(--red);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;
+}
+.btn-danger:hover{background:rgba(192,57,43,.1);}
+</style>
+<style>
+.dash-wrap{display:flex;min-height:100vh;padding-top:64px;}
+.sidebar{width:230px;flex-shrink:0;position:fixed;top:64px;left:0;bottom:0;background:var(--bg);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;z-index:40;padding:20px 12px;}
+.nav-group{margin-bottom:20px;}
+.nav-group-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:13px;color:var(--muted);text-decoration:none;transition:.15s;border:none;background:none;width:100%;font-family:'Geist',sans-serif;margin-bottom:2px;cursor:pointer;}
+.nav-item:hover{background:var(--s1);color:var(--ink);}
+.nav-item.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.sidebar-bottom{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);}
+.main{margin-left:230px;flex:1;padding:32px;}
+@media(max-width:900px){.sidebar{display:none;}.main{margin-left:0;padding:20px;}}
+
+/* Header */
+.page-header{margin-bottom:32px;}
+.page-header h1{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;}
+.page-header p{font-size:14px;color:var(--muted);}
+
+/* Category tabs */
+.lb-tabs{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.lb-tab{padding:9px 18px;background:var(--s1);border:1px solid var(--line);border-radius:10px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Geist',sans-serif;transition:.18s;letter-spacing:.04em;}
+.lb-tab:hover{border-color:var(--line2);color:var(--ink);}
+.lb-tab.active{border-color:var(--accent);color:var(--ink);}
+
+/* Podium */
+.podium{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:12px;margin-bottom:32px;align-items:end;
+}
+@media(max-width:600px){.podium{grid-template-columns:1fr;align-items:stretch;}}
+.podium-item{
+  background:var(--s1);border:1px solid var(--line);border-radius:18px;
+  padding:20px 16px;text-align:center;position:relative;transition:.2s;
+}
+.podium-item:hover{border-color:var(--line2);}
+.podium-item.first{
+  background:linear-gradient(135deg,rgba(200,168,75,.08) 0%, var(--s1) 100%);
+  border-color:rgba(200,168,75,.3);
+  padding-top:28px;
+}
+.podium-item.second{padding-top:20px;}
+.podium-item.third{padding-top:14px;}
+.podium-crown{font-size:22px;margin-bottom:6px;}
+.podium-av{
+  width:56px;height:56px;border-radius:50%;background:var(--s2);
+  border:2px solid var(--line);margin:0 auto 10px;
+  display:flex;align-items:center;justify-content:center;font-size:22px;position:relative;
+}
+.podium-av.first{border-color:rgba(200,168,75,.5);width:66px;height:66px;font-size:26px;}
+.podium-rank-badge{
+  position:absolute;bottom:-4px;right:-4px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;
+}
+.first .podium-rank-badge{background:var(--yellow);color:#090909;border:none;}
+.podium-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.podium-handle{font-size:10px;color:var(--muted);}
+.podium-score{font-size:18px;font-weight:800;color:var(--accent);margin-top:8px;}
+.podium-score-label{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+.podium-country{font-size:11px;margin-top:6px;}
+
+/* Full leaderboard table */
+.lb-table{background:var(--s1);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+.lb-table-head{
+  display:grid;grid-template-columns:40px 1fr 100px 100px 80px;
+  padding:10px 18px;border-bottom:1px solid var(--line);
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);gap:12px;
+}
+@media(max-width:640px){.lb-table-head{grid-template-columns:36px 1fr 80px 60px;}.hide-mobile{display:none;}}
+.lb-row{
+  display:grid;grid-template-columns:40px 1fr 100px 100px 80px;
+  padding:12px 18px;border-bottom:1px solid var(--line);
+  align-items:center;gap:12px;transition:.15s;cursor:pointer;
+}
+.lb-row:last-child{border-bottom:none;}
+.lb-row:hover{background:var(--s2);}
+.lb-row.me{background:rgba(217,212,199,.04);border-left:2px solid var(--accent);}
+@media(max-width:640px){.lb-row{grid-template-columns:36px 1fr 80px 60px;}}
+
+.lb-pos{
+  font-size:13px;font-weight:800;color:var(--muted2);text-align:center;
+}
+.lb-pos.top1{color:var(--yellow);}
+.lb-pos.top2{color:var(--ink);}
+.lb-pos.top3{color:#c87941;}
+
+.lb-player{display:flex;align-items:center;gap:10px;}
+.lb-av{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.lb-name{font-size:13px;font-weight:600;color:var(--ink);}
+.lb-country{font-size:10px;color:var(--muted);margin-top:1px;}
+.lb-games-row{display:flex;gap:3px;}
+.lb-game{width:20px;height:20px;border-radius:5px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:9px;}
+.lb-score{font-size:14px;font-weight:700;color:var(--ink);text-align:right;}
+.lb-trend{font-size:11px;font-weight:600;text-align:right;}
+.lb-trend.up{color:var(--green);}
+.lb-trend.down{color:var(--red);}
+.lb-trend.same{color:var(--muted2);}
+
+/* Me badge */
+.me-badge{font-size:9px;background:var(--accent);color:#090909;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:6px;}
+
+/* Refresh note */
+.refresh-note{font-size:11px;color:var(--muted2);text-align:center;padding:16px;letter-spacing:.04em;}
+
+/* Toast */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s1);border:1px solid var(--line);border-radius:20px;padding:9px 18px;font-size:12px;color:var(--ink);white-space:nowrap;opacity:0;transition:.3s;pointer-events:none;z-index:200;}
+</style>
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;"><div class="nav-logo-dot"></div>VEX OS</a>
+  <div class="nav-center">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="explore.html">Explorar</a>
+    <a href="chat.html">Chat</a>
+    <a href="leaderboard.html" style="color:var(--ink);">Leaderboard</a>
+  </div>
+  <div class="nav-right">
+    <a href="app.html" class="btn-ghost">Mi perfil</a>
+    <a href="dashboard.html" class="btn-solid">Dashboard</a>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <aside class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-label">Principal</div>
+      <a href="dashboard.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+      <a href="app.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>Mi perfil</a>
+      <a href="explore.html" class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Explorar</a>
+      <a href="leaderboard.html" class="nav-item active"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Leaderboard</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Filtrar por juego</div>
+      <div class="nav-item" onclick="setGame('global')">🌎 Global</div>
+      <div class="nav-item" onclick="setGame('Valorant')">🎯 Valorant</div>
+      <div class="nav-item" onclick="setGame('CS2')">🔫 CS2</div>
+      <div class="nav-item" onclick="setGame('Roblox')">🧱 Roblox</div>
+      <div class="nav-item" onclick="setGame('Fortnite')">🏗 Fortnite</div>
+    </div>
+    <div class="sidebar-bottom">
+      <a href="settings.html" class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuración</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <h1>🏆 Leaderboard</h1>
+      <p>Los gamers más activos de VEX OS. Actualizado cada 24 horas.</p>
+    </div>
+
+    <div class="lb-tabs">
+      <div class="lb-tab active" onclick="setCategory('horas',this)">⏱ Horas jugadas</div>
+      <div class="lb-tab" onclick="setCategory('nivel',this)">⭐ Nivel</div>
+      <div class="lb-tab" onclick="setCategory('clips',this)">🎬 Clips</div>
+      <div class="lb-tab" onclick="setCategory('amigos',this)">👥 Amigos</div>
+      <div class="lb-tab" onclick="setCategory('racha',this)">⚡ Racha</div>
+    </div>
+
+    <!-- Podium top 3 -->
+    <div class="podium" id="podium"></div>
+
+    <!-- Full table -->
+    <div class="lb-table">
+      <div class="lb-table-head">
+        <div>#</div>
+        <div>Jugador</div>
+        <div class="hide-mobile">Juegos</div>
+        <div>Puntos</div>
+        <div>Cambio</div>
+      </div>
+      <div id="lbBody"></div>
+    </div>
+
+    <div class="refresh-note">Actualizado hace 3 horas · Próxima actualización en 21h</div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>/* ============================================================
+   VEX OS — auth.js
+   Login, register, session helpers
+============================================================ */
+
+function hashSimple(s){
+  let h=0;
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xFFFFFF;
+  return h.toString(16);
+}
+
+function getAccounts(){ return JSON.parse(localStorage.getItem('vex_accounts')||'{}'); }
+function setAccounts(a){ localStorage.setItem('vex_accounts',JSON.stringify(a)); }
+function getSession(){ return JSON.parse(localStorage.getItem('vex_user')||'null'); }
+function setSession(u){ localStorage.setItem('vex_user',JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem('vex_user'); }
+function isLoggedIn(){ return !!getSession(); }
+
+function doLogin(user, pass, errEl){
+  user=user.trim().toLowerCase();
+  if(!user||!pass){ showErr(errEl,'Completa todos los campos'); return false; }
+  const accounts=getAccounts();
+  if(!accounts[user]){ showErr(errEl,'Usuario no encontrado'); return false; }
+  if(accounts[user].passHash!==hashSimple(pass)){ showErr(errEl,'Contraseña incorrecta'); return false; }
+  setSession(accounts[user]);
+  // Sync vex_profile with account data
+  localStorage.setItem('vex_profile', JSON.stringify(accounts[user].profile||{}));
+  return true;
+}
+
+function doRegister(data, errEl){
+  const {username, pass, age, country, lang, schedule}=data;
+  const key=username.trim().toLowerCase();
+  if(!key||!pass||!age||!country){ showErr(errEl,'Completa todos los campos'); return false; }
+  if(isNaN(age)||parseInt(age)<14){ showErr(errEl,'Debes tener al menos 14 años'); return false; }
+  if(pass.length<6){ showErr(errEl,'Contraseña mínimo 6 caracteres'); return false; }
+  if(!/^[a-zA-Z0-9_]+$/.test(key)){ showErr(errEl,'Username: solo letras, números y _'); return false; }
+  const accounts=getAccounts();
+  if(accounts[key]){ showErr(errEl,'Username ya en uso'); return false; }
+
+  const profile={
+    name: username, username: key, bio:'', country, lang, schedule,
+    status:'online', avatar:'', games:[], music:[], socials:{}, setupDone:false
+  };
+  const account={ username:key, passHash:hashSimple(pass), age:parseInt(age), createdAt:Date.now(), profile };
+  accounts[key]=account;
+  setAccounts(accounts);
+  setSession(account);
+  localStorage.setItem('vex_profile', JSON.stringify(profile));
+  return true;
+}
+
+function showErr(el, msg){
+  if(!el) return;
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4000);
+}
+
+function requireAuth(redirect='login.html'){
+  if(!isLoggedIn()) window.location.href=redirect;
+}
+
+function logout(){
+  clearSession();
+  window.location.href='index.html';
+}
+
+// Spawn background particles (shared utility)
+function spawnParticles(containerId='ambient', count=20){
+  const amb=document.getElementById(containerId);
+  if(!amb) return;
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div'); s.className='speck';
+    s.style.left=Math.random()*100+'vw';
+    s.style.setProperty('--dx',(Math.random()*60-30)+'px');
+    s.style.animationDuration=(12+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    amb.appendChild(s);
+  }
+}
+</script>
+<script>
+spawnParticles('ambient', 12);
+
+const session = JSON.parse(localStorage.getItem('vex_user') || 'null');
+const myName  = session?.username || null;
+
+const DATA = {
+  horas: [
+    {name:'VEX',       handle:'@qv3x',    emoji:'🎯', country:'🇵🇪', games:['Valorant','Roblox','CS2'],   score:724,  trend:+18, me:true},
+    {name:'nx_kira',   handle:'@nx_kira', emoji:'⚡', country:'🇵🇪', games:['Valorant','CS2'],            score:698,  trend:+34},
+    {name:'dark_frag', handle:'@darkfrag',emoji:'🔫', country:'🇲🇽', games:['Valorant','Fortnite'],       score:651,  trend:-5},
+    {name:'zeph_gg',   handle:'@zeph_gg', emoji:'🌆', country:'🇲🇽', games:['Valorant','GTA V'],          score:610,  trend:+12},
+    {name:'nxy_vortex',handle:'@nxyvortx',emoji:'⚔️', country:'🇦🇷', games:['CS2','Elden Ring'],         score:589,  trend:0},
+    {name:'rex_plays', handle:'@rexplays',emoji:'🎬', country:'🇻🇪', games:['GTA V','Roblox'],            score:544,  trend:-8},
+    {name:'skyrift',   handle:'@skyrift', emoji:'🛡', country:'🇺🇾', games:['Overwatch 2','Valorant'],    score:521,  trend:+6},
+    {name:'kx_storm',  handle:'@kxstorm', emoji:'🏆', country:'🇨🇱', games:['LoL','Valorant'],            score:498,  trend:+22},
+    {name:'crix_ar',   handle:'@crix_ar', emoji:'💣', country:'🇦🇷', games:['Warzone','CS2'],             score:477,  trend:-14},
+    {name:'lks9',      handle:'@lks9',    emoji:'🧱', country:'🇪🇸', games:['Fortnite','Minecraft'],      score:455,  trend:0},
+  ],
+  nivel: [
+    {name:'nx_kira',   handle:'@nx_kira', emoji:'⚡', country:'🇵🇪', games:['Valorant','CS2'],       score:88,  trend:+2},
+    {name:'dark_frag', handle:'@darkfrag',emoji:'🔫', country:'🇲🇽', games:['Valorant','Fortnite'], score:81,  trend:+1},
+    {name:'VEX',       handle:'@qv3x',    emoji:'🎯', country:'🇵🇪', games:['Valorant','Roblox'],   score:47,  trend:+3, me:true},
+    {name:'zeph_gg',   handle:'@zeph_gg', emoji:'🌆', country:'🇲🇽', games:['GTA V'],               score:44,  trend:0},
+    {name:'skyrift',   handle:'@skyrift', emoji:'🛡', country:'🇺🇾', games:['Overwatch 2'],          score:41,  trend:+5},
+    {name:'kx_storm',  handle:'@kxstorm', emoji:'🏆', country:'🇨🇱', games:['LoL'],                  score:39,  trend:-1},
+    {name:'rex_plays', handle:'@rexplays',emoji:'🎬', country:'🇻🇪', games:['GTA V','Roblox'],      score:35,  trend:0},
+    {name:'nxy_vortex',handle:'@nxyvortx',emoji:'⚔️', country:'🇦🇷', games:['CS2','Elden Ring'],   score:33,  trend:+2},
+    {name:'crix_ar',   handle:'@crix_ar', emoji:'💣', country:'🇦🇷', games:['Warzone'],             score:30,  trend:-3},
+    {name:'lks9',      handle:'@lks9',    emoji:'🧱', country:'🇪🇸', games:['Minecraft'],           score:27,  trend:0},
+  ],
+  clips: [
+    {name:'rex_plays', handle:'@rexplays',emoji:'🎬', country:'🇻🇪', games:['GTA V'],               score:24,  trend:+5},
+    {name:'nx_kira',   handle:'@nx_kira', emoji:'⚡', country:'🇵🇪', games:['Valorant'],             score:18,  trend:+2},
+    {name:'dark_frag', handle:'@darkfrag',emoji:'🔫', country:'🇲🇽', games:['Valorant'],             score:15,  trend:0},
+    {name:'VEX',       handle:'@qv3x',    emoji:'🎯', country:'🇵🇪', games:['Valorant','CS2'],       score:12,  trend:+3, me:true},
+    {name:'kx_storm',  handle:'@kxstorm', emoji:'🏆', country:'🇨🇱', games:['LoL'],                  score:10,  trend:+1},
+    {name:'zeph_gg',   handle:'@zeph_gg', emoji:'🌆', country:'🇲🇽', games:['GTA V'],               score:8,   trend:-2},
+    {name:'skyrift',   handle:'@skyrift', emoji:'🛡', country:'🇺🇾', games:['Overwatch 2'],          score:7,   trend:0},
+    {name:'nxy_vortex',handle:'@nxyvortx',emoji:'⚔️', country:'🇦🇷', games:['CS2'],                score:5,   trend:+1},
+    {name:'crix_ar',   handle:'@crix_ar', emoji:'💣', country:'🇦🇷', games:['Warzone'],             score:4,   trend:0},
+    {name:'lks9',      handle:'@lks9',    emoji:'🧱', country:'🇪🇸', games:['Minecraft'],           score:2,   trend:-1},
+  ],
+  amigos: [
+    {name:'dark_frag', handle:'@darkfrag',emoji:'🔫', country:'🇲🇽', games:['Valorant','Fortnite'], score:248, trend:+12},
+    {name:'kx_storm',  handle:'@kxstorm', emoji:'🏆', country:'🇨🇱', games:['LoL'],                  score:201, trend:+8},
+    {name:'nx_kira',   handle:'@nx_kira', emoji:'⚡', country:'🇵🇪', games:['Valorant'],             score:187, trend:+4},
+    {name:'rex_plays', handle:'@rexplays',emoji:'🎬', country:'🇻🇪', games:['GTA V'],               score:165, trend:-3},
+    {name:'VEX',       handle:'@qv3x',    emoji:'🎯', country:'🇵🇪', games:['Valorant','Roblox'],   score:134, trend:+6, me:true},
+    {name:'zeph_gg',   handle:'@zeph_gg', emoji:'🌆', country:'🇲🇽', games:['GTA V'],               score:122, trend:0},
+    {name:'skyrift',   handle:'@skyrift', emoji:'🛡', country:'🇺🇾', games:['Overwatch 2'],          score:98,  trend:+2},
+    {name:'nxy_vortex',handle:'@nxyvortx',emoji:'⚔️', country:'🇦🇷', games:['CS2'],                score:87,  trend:-5},
+    {name:'lks9',      handle:'@lks9',    emoji:'🧱', country:'🇪🇸', games:['Minecraft'],           score:74,  trend:+1},
+    {name:'crix_ar',   handle:'@crix_ar', emoji:'💣', country:'🇦🇷', games:['Warzone'],             score:61,  trend:-2},
+  ],
+  racha: [
+    {name:'nx_kira',   handle:'@nx_kira', emoji:'⚡', country:'🇵🇪', games:['Valorant'],             score:34,  trend:+1},
+    {name:'VEX',       handle:'@qv3x',    emoji:'🎯', country:'🇵🇪', games:['Roblox'],               score:21,  trend:0, me:true},
+    {name:'dark_frag', handle:'@darkfrag',emoji:'🔫', country:'🇲🇽', games:['Valorant'],             score:18,  trend:+3},
+    {name:'skyrift',   handle:'@skyrift', emoji:'🛡', country:'🇺🇾', games:['Overwatch 2'],          score:15,  trend:0},
+    {name:'zeph_gg',   handle:'@zeph_gg', emoji:'🌆', country:'🇲🇽', games:['GTA V'],               score:12,  trend:-2},
+    {name:'kx_storm',  handle:'@kxstorm', emoji:'🏆', country:'🇨🇱', games:['LoL'],                  score:10,  trend:+1},
+    {name:'rex_plays', handle:'@rexplays',emoji:'🎬', country:'🇻🇪', games:['GTA V'],               score:8,   trend:0},
+    {name:'nxy_vortex',handle:'@nxyvortx',emoji:'⚔️', country:'🇦🇷', games:['CS2'],                score:7,   trend:0},
+    {name:'lks9',      handle:'@lks9',    emoji:'🧱', country:'🇪🇸', games:['Minecraft'],           score:5,   trend:-1},
+    {name:'crix_ar',   handle:'@crix_ar', emoji:'💣', country:'🇦🇷', games:['Warzone'],             score:3,   trend:0},
+  ]
+};
+
+const UNITS = {horas:'h',nivel:'',clips:'',amigos:'',racha:'d'};
+const LABELS = {horas:'horas',nivel:'nivel',clips:'clips',amigos:'amigos',racha:'días'};
+let currentCat = 'horas';
+
+const GAME_EMOJIS = {Valorant:'🎯',CS2:'🔫',Roblox:'🧱',Fortnite:'🏗','GTA V':'🌆','Elden Ring':'⚔️','Overwatch 2':'🛡',Warzone:'💣',LoL:'🏆',Minecraft:'⛏'};
+
+function posClass(i){ return i===0?'top1':i===1?'top2':i===2?'top3':''; }
+function posMedal(i){ return i===0?'🥇':i===1?'🥈':i===2?'🥉':null; }
+
+function render(){
+  const list = DATA[currentCat];
+  const unit = UNITS[currentCat];
+
+  // Podium (top 3) — order: 2nd, 1st, 3rd
+  const order = [1,0,2];
+  const podiumClasses = ['second','first','third'];
+  const podiumCrowns  = ['🥈','🥇','🥉'];
+  document.getElementById('podium').innerHTML = order.map((ri,pi) => {
+    const p = list[ri];
+    return `<div class="podium-item ${podiumClasses[pi]}">
+      <div class="podium-crown">${podiumCrowns[pi]}</div>
+      <div class="podium-av ${podiumClasses[pi]}" >${p.emoji}
+        <div class="podium-rank-badge">${ri+1}</div>
+      </div>
+      <div class="podium-name">${p.name}${p.me?'<span class="me-badge">TÚ</span>':''}</div>
+      <div class="podium-handle">${p.handle}</div>
+      <div class="podium-country">${p.country}</div>
+      <div class="podium-score">${p.score}${unit}</div>
+      <div class="podium-score-label">${LABELS[currentCat]}</div>
+    </div>`;
+  }).join('');
+
+  // Full table
+  document.getElementById('lbBody').innerHTML = list.map((p,i) => {
+    const trendHtml = p.trend > 0
+      ? `<div class="lb-trend up">↑ +${p.trend}</div>`
+      : p.trend < 0
+        ? `<div class="lb-trend down">↓ ${p.trend}</div>`
+        : `<div class="lb-trend same">—</div>`;
+    const medal = posMedal(i);
+    return `<div class="lb-row ${p.me?'me':''}" onclick="showToast('${p.handle} · ${p.score}${unit} ${LABELS[currentCat]}')">
+      <div class="lb-pos ${posClass(i)}">${medal || (i+1)}</div>
+      <div class="lb-player">
+        <div class="lb-av">${p.emoji}</div>
+        <div>
+          <div class="lb-name">${p.name}${p.me?'<span class="me-badge">TÚ</span>':''}</div>
+          <div class="lb-country">${p.country}</div>
+        </div>
+      </div>
+      <div class="lb-games-row hide-mobile">${p.games.slice(0,3).map(g=>`<div class="lb-game">${GAME_EMOJIS[g]||'🎮'}</div>`).join('')}</div>
+      <div class="lb-score">${p.score}${unit}</div>
+      ${trendHtml}
+    </div>`;
+  }).join('');
+}
+
+function setCategory(cat, el){
+  currentCat = cat;
+  document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function setGame(g){
+  showToast(g === 'global' ? 'Vista global' : `Filtro: ${g}`);
+}
+
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.opacity = '1'; el.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(10px)'; }, 2400);
+}
+
+render();
+</script>
+</body>
+</html>

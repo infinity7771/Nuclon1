@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEX OS · Centro de Ayuda</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>/* ============================================================
+   VEX OS — shared.css
+   Estilos compartidos para páginas fuera del iPhone
+============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;}
+*::-webkit-scrollbar{display:none;}
+
+:root{
+  --bg:#090909;
+  --s1:#111116;
+  --s2:#18181f;
+  --line:#24242b;
+  --line2:#2e2e38;
+  --ink:#F2F0EB;
+  --muted:#6a6a72;
+  --muted2:#3e3e47;
+  --accent:#D9D4C7;
+  --green:#3d9970;
+  --yellow:#c8a84b;
+  --red:#c0392b;
+  --nav-h:64px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Geist',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ---- Partículas ---- */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.speck{
+  position:absolute;bottom:-4px;width:1.5px;height:1.5px;border-radius:50%;
+  background:rgba(242,240,235,0.15);animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:1;}90%{opacity:1;}
+  100%{transform:translateY(-110vh) translateX(var(--dx,20px));opacity:0;}
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(9,9,9,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;z-index:100;
+}
+.nav-logo{
+  font-size:18px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink);text-decoration:none;
+}
+.nav-links{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-links a{
+  font-size:12px;font-weight:500;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;transition:.2s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--ink);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+.nav-cta{
+  display:flex;align-items:center;gap:10px;
+}
+.btn-nav-ghost{
+  padding:8px 18px;border:1px solid var(--line);border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;transition:.2s;letter-spacing:.06em;
+  background:transparent;cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-ghost:hover{border-color:var(--line2);color:var(--ink);}
+.btn-nav-solid{
+  padding:8px 18px;background:var(--accent);border:none;border-radius:10px;
+  font-size:12px;font-weight:700;color:var(--bg);
+  text-decoration:none;transition:.15s;letter-spacing:.06em;
+  cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-solid:hover{opacity:.9;}
+
+/* Mobile nav toggle */
+.nav-mobile-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  color:var(--muted);padding:4px;
+}
+@media(max-width:700px){
+  .navbar{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-mobile-toggle{display:block;}
+}
+
+/* ============================================================
+   PAGE WRAPPER
+============================================================ */
+.page{
+  padding-top:var(--nav-h);
+  min-height:100vh;
+  position:relative;z-index:1;
+}
+
+/* ============================================================
+   COMMON SECTIONS
+============================================================ */
+.section{
+  max-width:1100px;
+  margin:0 auto;
+  padding:80px 40px;
+}
+@media(max-width:700px){.section{padding:60px 20px;}}
+
+.section-label{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.section-title{
+  font-size:clamp(28px,5vw,48px);font-weight:800;
+  letter-spacing:-.02em;line-height:1.15;color:var(--ink);
+  margin-bottom:14px;
+}
+.section-sub{
+  font-size:16px;color:var(--muted);line-height:1.7;
+  max-width:560px;
+}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--line);margin:0;}
+
+/* Cards */
+.card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+}
+.card:hover{border-color:var(--line2);}
+
+/* ============================================================
+   BUTTONS (full-page)
+============================================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:12px;
+  font-size:13px;font-weight:700;letter-spacing:.08em;
+  font-family:'Geist',sans-serif;cursor:pointer;
+  text-decoration:none;transition:.15s;border:none;
+}
+.btn-primary{background:var(--accent);color:var(--bg);}
+.btn-primary:hover{opacity:.9;}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--line2);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer{
+  border-top:1px solid var(--line);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+  position:relative;z-index:1;
+}
+.footer-logo{font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:.2s;}
+.footer-links a:hover{color:var(--ink);}
+.footer-copy{font-size:10px;color:var(--muted2);letter-spacing:.06em;}
+@media(max-width:600px){.footer{padding:24px 20px;flex-direction:column;text-align:center;}}
+
+/* ============================================================
+   FORM INPUTS (login, etc)
+============================================================ */
+.form-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:20px;padding:32px;width:100%;max-width:420px;
+}
+.form-field{margin-bottom:16px;}
+.form-field label{
+  display:block;font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:7px;
+}
+.form-field input,.form-field select{
+  width:100%;background:var(--s2);border:1px solid var(--line);
+  border-radius:10px;padding:13px 16px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--line2);}
+.form-tabs{
+  display:flex;background:var(--s2);border:1px solid var(--line);
+  border-radius:12px;padding:4px;margin-bottom:24px;gap:4px;
+}
+.form-tab{
+  flex:1;padding:9px;border:none;background:transparent;
+  font-family:'Geist',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;color:var(--muted);cursor:pointer;
+  border-radius:9px;transition:.2s;
+}
+.form-tab.active{background:var(--s1);color:var(--ink);border:1px solid var(--line);}
+.form-error{
+  font-size:11px;color:var(--red);display:none;
+  padding:8px 12px;background:rgba(192,57,43,.08);
+  border:1px solid rgba(192,57,43,.25);border-radius:8px;margin-bottom:12px;
+}
+.form-error.show{display:block;}
+.form-note{
+  font-size:10px;color:var(--muted);line-height:1.6;
+  margin-top:16px;padding:12px;background:var(--s2);
+  border:1px solid var(--line);border-radius:10px;
+}
+.form-note b{color:var(--muted2);}
+
+/* ============================================================
+   DASHBOARD LAYOUT
+============================================================ */
+.app-layout{
+  display:flex;min-height:calc(100vh - var(--nav-h));
+  padding-top:var(--nav-h);
+}
+.sidebar{
+  width:220px;flex-shrink:0;
+  border-right:1px solid var(--line);
+  padding:24px 16px;
+  position:fixed;top:var(--nav-h);left:0;bottom:0;
+  overflow-y:auto;background:var(--bg);z-index:40;
+}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px;}
+.sidebar-link{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:.15s;cursor:pointer;border:none;background:none;width:100%;
+  font-family:'Geist',sans-serif;
+}
+.sidebar-link:hover{background:var(--s1);color:var(--ink);}
+.sidebar-link.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.sidebar-link svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.sidebar-link .badge-count{
+  margin-left:auto;font-size:9px;background:var(--accent);
+  color:var(--bg);border-radius:20px;padding:2px 7px;font-weight:700;
+}
+.main-content{
+  margin-left:220px;flex:1;padding:32px;
+  max-width:calc(100vw - 220px);
+}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main-content{margin-left:0;max-width:100%;padding:20px;}
+}
+
+/* ============================================================
+   PROFILE CARDS
+============================================================ */
+.profile-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;transition:.2s;cursor:pointer;
+}
+.profile-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.pc-banner{height:60px;background:linear-gradient(135deg,var(--s2),var(--line));position:relative;}
+.pc-av{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--bg);
+  position:absolute;bottom:-26px;left:16px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
+}
+.pc-av img{width:100%;height:100%;object-fit:cover;}
+.pc-body{padding:34px 16px 16px;}
+.pc-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;}
+.pc-handle{font-size:11px;color:var(--muted);margin-top:2px;}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0;}
+.pc-tag{font-size:9px;padding:3px 8px;border-radius:20px;background:var(--s2);border:1px solid var(--line);color:var(--muted);}
+.pc-games{display:flex;gap:4px;margin-top:8px;}
+.pc-game{width:28px;height:28px;border-radius:8px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pc-footer{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.pc-compat{font-size:12px;font-weight:700;color:var(--accent);}
+.pc-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.pc-dot{width:6px;height:6px;border-radius:50%;}
+.pc-dot.online{background:var(--green);}
+.pc-dot.away{background:var(--yellow);}
+.pc-dot.offline{background:var(--muted2);}
+
+/* ============================================================
+   STAT CARDS
+============================================================ */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:800px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:18px 20px;
+}
+.sc-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sc-value{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.sc-trend{font-size:11px;color:var(--green);margin-top:4px;}
+
+/* ============================================================
+   ACTIVITY FEED
+============================================================ */
+.activity-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.act-content{flex:1;min-width:0;}
+.act-text{font-size:13px;color:var(--ink);line-height:1.4;}
+.act-time{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+
+/* ============================================================
+   SEARCH & FILTERS
+============================================================ */
+.search-bar{
+  display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+}
+.search-input-wrap{
+  flex:1;min-width:200px;position:relative;
+}
+.search-input-wrap svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--muted);
+}
+.search-input{
+  width:100%;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px 12px 40px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;outline:none;transition:.2s;
+}
+.search-input:focus{border-color:var(--line2);}
+.filter-btn{
+  padding:11px 16px;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;font-size:12px;color:var(--muted);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;white-space:nowrap;
+}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--ink);}
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+.sec-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.sec-header h2{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+.sec-header a{font-size:12px;color:var(--muted);text-decoration:none;transition:.2s;}
+.sec-header a:hover{color:var(--ink);}
+
+/* ============================================================
+   SETTINGS
+============================================================ */
+.settings-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-info .settings-title{font-size:13px;color:var(--ink);font-weight:500;}
+.settings-info .settings-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.toggle{
+  width:44px;height:24px;border-radius:12px;background:var(--line);
+  border:none;cursor:pointer;position:relative;transition:.2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green);}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;background:white;
+  transition:transform .2s;
+}
+.toggle.on::after{transform:translateX(20px);}
+.danger-zone{
+  background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);
+  border-radius:16px;padding:20px;margin-top:24px;
+}
+.danger-zone h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:14px;}
+.btn-danger{
+  padding:10px 20px;background:transparent;border:1px solid var(--red);
+  border-radius:10px;font-size:12px;color:var(--red);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;
+}
+.btn-danger:hover{background:rgba(192,57,43,.1);}
+</style>
+<style>
+.help-wrap{max-width:800px;margin:0 auto;padding:88px 24px 80px;}
+@media(max-width:600px){.help-wrap{padding:76px 16px 60px;}}
+
+/* Search */
+.help-search{
+  text-align:center;margin-bottom:48px;
+}
+.help-search h1{font-size:clamp(28px,5vw,42px);font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:8px;}
+.help-search p{font-size:15px;color:var(--muted);margin-bottom:20px;}
+.search-row{position:relative;max-width:480px;margin:0 auto;}
+.search-row svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted);fill:none;}
+.search-row input{
+  width:100%;background:var(--s1);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px 14px 46px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;outline:none;transition:.2s;
+}
+.search-row input:focus{border-color:var(--line2);}
+
+/* Category cards */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:48px;}
+@media(max-width:600px){.cat-grid{grid-template-columns:1fr 1fr;}}
+.cat-card{
+  background:var(--s1);border:1px solid var(--line);border-radius:16px;
+  padding:20px;text-align:center;cursor:pointer;transition:.2s;
+}
+.cat-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.cat-card.active{border-color:var(--accent);background:var(--s2);}
+.cat-icon{font-size:24px;margin-bottom:8px;}
+.cat-name{font-size:13px;font-weight:600;color:var(--ink);}
+.cat-count{font-size:10px;color:var(--muted);margin-top:3px;}
+
+/* FAQ accordion */
+.faq-section{margin-bottom:32px;}
+.faq-section-title{
+  font-size:16px;font-weight:700;color:var(--ink);
+  margin-bottom:12px;padding-bottom:10px;
+  border-bottom:1px solid var(--line);
+}
+.faq-item{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:14px;margin-bottom:8px;overflow:hidden;transition:.2s;
+}
+.faq-item:hover{border-color:var(--line2);}
+.faq-item.open{border-color:var(--line2);}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;cursor:pointer;
+}
+.faq-q-text{font-size:13px;font-weight:500;color:var(--ink);flex:1;padding-right:12px;}
+.faq-arrow{
+  width:20px;height:20px;flex-shrink:0;color:var(--muted);
+  transition:transform .2s;
+}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{
+  padding:0 18px 0;max-height:0;overflow:hidden;
+  transition:max-height .3s ease, padding .3s ease;
+}
+.faq-item.open .faq-a{max-height:300px;padding:0 18px 16px;}
+.faq-a p{font-size:13px;color:var(--muted);line-height:1.75;}
+.faq-a a{color:var(--accent);text-decoration:none;}
+.faq-a a:hover{text-decoration:underline;}
+.faq-a code{background:var(--s2);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--ink);}
+
+/* Contact card */
+.contact-card{
+  background:var(--s1);border:1px solid var(--line);border-radius:20px;
+  padding:28px;text-align:center;margin-top:48px;
+}
+.contact-card h2{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.contact-card p{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.contact-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* Highlight answer box */
+.highlight-box{
+  background:var(--s2);border:1px solid var(--line);border-radius:10px;
+  padding:10px 14px;margin-top:8px;font-size:12px;color:var(--muted);
+}
+.highlight-box b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;"><div class="nav-logo-dot"></div>VEX OS</a>
+  <div class="nav-center">
+    <a href="index.html">Inicio</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="creators.html">Creadores</a>
+  </div>
+  <div class="nav-right">
+    <a href="login.html" class="btn-ghost" id="navLogin">Entrar</a>
+    <a href="login.html#register" class="btn-solid" id="navReg">Crear perfil</a>
+  </div>
+</nav>
+
+<div class="help-wrap">
+
+  <!-- Hero search -->
+  <div class="help-search">
+    <h1>¿En qué podemos ayudarte?</h1>
+    <p>Encuentra respuestas rápidas sobre VEX OS.</p>
+    <div class="search-row">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Buscar en el centro de ayuda..." id="searchInput" oninput="filterFAQ()"/>
+    </div>
+  </div>
+
+  <!-- Category cards -->
+  <div class="cat-grid">
+    <div class="cat-card active" onclick="filterCat('all',this)">
+      <div class="cat-icon">📚</div>
+      <div class="cat-name">Todo</div>
+      <div class="cat-count">24 artículos</div>
+    </div>
+    <div class="cat-card" onclick="filterCat('cuenta',this)">
+      <div class="cat-icon">👤</div>
+      <div class="cat-name">Cuenta</div>
+      <div class="cat-count">6 artículos</div>
+    </div>
+    <div class="cat-card" onclick="filterCat('perfil',this)">
+      <div class="cat-icon">🎮</div>
+      <div class="cat-name">Perfil</div>
+      <div class="cat-count">5 artículos</div>
+    </div>
+    <div class="cat-card" onclick="filterCat('social',this)">
+      <div class="cat-icon">👥</div>
+      <div class="cat-name">Social</div>
+      <div class="cat-count">5 artículos</div>
+    </div>
+    <div class="cat-card" onclick="filterCat('torneos',this)">
+      <div class="cat-icon">🏆</div>
+      <div class="cat-name">Torneos</div>
+      <div class="cat-count">4 artículos</div>
+    </div>
+    <div class="cat-card" onclick="filterCat('tecnico',this)">
+      <div class="cat-icon">⚙️</div>
+      <div class="cat-name">Técnico</div>
+      <div class="cat-count">4 artículos</div>
+    </div>
+  </div>
+
+  <!-- FAQ sections -->
+  <div id="faqContainer">
+
+    <div class="faq-section" data-cat="cuenta">
+      <div class="faq-section-title">👤 Cuenta</div>
+
+      <div class="faq-item" data-q="como crear cuenta como registro" data-cat="cuenta">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo creo una cuenta?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve a <a href="login.html#register">Registrarse</a>, elige un username único (solo letras, números y guión bajo), una contraseña de mínimo 6 caracteres, tu edad, país e idioma. El proceso toma menos de 2 minutos.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="edad minima cuantos años" data-cat="cuenta">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cuál es la edad mínima para registrarse?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p><b>14 años.</b> Al registrarte confirmas que tienes al menos 14 años. Cuentas de menores de esa edad serán suspendidas.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="olvidé contraseña recuperar" data-cat="cuenta">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">Olvidé mi contraseña, ¿cómo la recupero?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>VEX OS guarda los datos localmente en tu dispositivo. Si olvidaste tu contraseña y sigues en el mismo dispositivo, puedes intentar recordarla desde las DevTools del navegador: <code>F12 → Application → Local Storage → vex_accounts</code>.</p>
+          <div class="highlight-box"><b>Nota:</b> Actualmente no tenemos sistema de recuperación por email porque no almacenamos correos. Esto mejorará en versiones futuras.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-q="cambiar username nombre usuario" data-cat="cuenta">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Puedo cambiar mi username?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Por el momento el username no es editable (es tu identificador único en la plataforma). Puedes cambiar tu nombre visible (tag) desde <a href="settings.html">Configuración → Perfil</a>. El cambio de username llegará en una actualización futura.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="eliminar borrar cuenta" data-cat="cuenta">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo elimino mi cuenta?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve a <a href="settings.html">Configuración → Zona peligrosa → Eliminar mi cuenta</a>. Se te pedirá confirmación dos veces. Esta acción es permanente e irreversible.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="cambiar contraseña password" data-cat="cuenta">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo cambio mi contraseña?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve a <a href="settings.html">Configuración → Cuenta → Credenciales</a>. Ingresa tu contraseña actual y la nueva (mínimo 6 caracteres). Confirma y guarda.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section" data-cat="perfil">
+      <div class="faq-section-title">🎮 Perfil gamer</div>
+
+      <div class="faq-item" data-q="foto perfil avatar subir" data-cat="perfil">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo subo mi foto de perfil?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve a <a href="app.html">tu perfil</a> → pestaña Perfil (ícono de persona) → toca el avatar. También puedes hacerlo desde <a href="settings.html">Configuración → Perfil → Foto de perfil</a>. Acepta PNG y JPG hasta 2MB. La foto se guarda en tu dispositivo.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="añadir juegos favoritos agregar" data-cat="perfil">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo añado mis juegos favoritos?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve al perfil iPhone → pestaña Perfil → sección "Juegos favoritos" → botón "+ AÑADIR JUEGO". Puedes añadir el nombre, un emoji, el género y las horas jugadas. Los juegos aparecen en tu perfil público.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="añadir música artistas playlist spotify" data-cat="perfil">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo añado mi música?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>En el perfil iPhone → pestaña Perfil → "Música favorita" → "+ AÑADIR CANCIÓN / ARTISTA". Puedes añadir el título, artista, género y un link opcional de Spotify o YouTube. También puedes pegar el link de tu playlist de Spotify.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="insignias badges como conseguir" data-cat="perfil">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo consigo insignias?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>Las insignias se otorgan automáticamente por actividad:</p>
+          <div class="highlight-box">
+            <b>🏅 Fundador</b> — Primeros 1,000 usuarios registrados<br>
+            <b>💎 Diamante</b> — Alcanzar rango Diamante en cualquier juego<br>
+            <b>🎙 Streamer</b> — Conectar cuenta de Kick o YouTube<br>
+            <b>⚡ Racha</b> — 21 días de racha activa en un juego<br>
+            <b>👥 Social</b> — 100+ amigos en la plataforma<br>
+            <b>👑 Líder</b> — Fundar o liderar un clan
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-q="perfil público compartir link" data-cat="perfil">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo comparto mi perfil?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve a <a href="profile.html">tu perfil público</a> y toca "Compartir perfil". Se copiará el link automáticamente. Puedes compartirlo en Discord, TikTok, Instagram o donde quieras. Cualquier persona puede ver tu perfil aunque no tenga cuenta.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section" data-cat="social">
+      <div class="faq-section-title">👥 Social y comunidad</div>
+
+      <div class="faq-item" data-q="chat mensajes como funciona enviar" data-cat="social">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo funciona el chat?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>El <a href="chat.html">chat</a> funciona como mensajería directa. Tienes conversaciones con tus amigos y grupos (clanes). Los mensajes se guardan en tu dispositivo. Puedes enviar texto y reaccionar con emojis. Usa las teclas ← → para navegar entre conversaciones.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="match compatibilidad como funciona porcentaje" data-cat="social">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo funciona el sistema de match?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>El porcentaje de compatibilidad se calcula basado en 4 factores:</p>
+          <div class="highlight-box">
+            <b>Juegos en común</b> (40%) — Cuántos juegos comparten<br>
+            <b>Región</b> (25%) — Si son del mismo país o zona<br>
+            <b>Horario</b> (20%) — Si juegan a horas similares<br>
+            <b>Idioma</b> (15%) — Si comparten idioma principal
+          </div>
+          <p style="margin-top:8px;">Ve a <a href="matchmaking.html">Buscar Dúo</a> para hacer swipe y conectar con jugadores.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-q="clan crear unirse" data-cat="social">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo creo o me uno a un clan?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Puedes ver los clanes disponibles desde tu perfil iPhone → pestaña Social. Para crear un clan, próximamente habrá un botón "Crear clan" en esa sección. Por ahora, usa el Discord oficial para organizar tu clan y luego regístralo en VEX OS.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="reportar bloquear usuario" data-cat="social">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo reporto o bloqueo a alguien?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>En el perfil de cualquier usuario verás un menú "⋯" con las opciones Reportar y Bloquear. Los reportes son revisados por el equipo de VEX OS. Los usuarios bloqueados no pueden enviarte mensajes ni ver tu perfil.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="notificaciones deshabilitar configurar" data-cat="social">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo configuro mis notificaciones?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve a <a href="settings.html">Configuración → Notificaciones</a>. Puedes activar o desactivar individualmente: solicitudes de amistad, nuevos matches, amigos online, logros, likes en clips y actualizaciones de la plataforma.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section" data-cat="torneos">
+      <div class="faq-section-title">🏆 Torneos</div>
+
+      <div class="faq-item" data-q="inscribirse torneo como participar" data-cat="torneos">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cómo me inscribo a un torneo?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Ve a <a href="tournaments.html">Torneos</a>, encuentra el torneo que te interese y toca "Inscribirse". Recibirás una notificación con los detalles. Los torneos gratuitos no requieren información adicional.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="premio recompensa ganar torneo" data-cat="torneos">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Qué se gana en los torneos?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>Dependiendo del torneo, los premios incluyen:</p>
+          <div class="highlight-box">
+            <b>🏅 Insignias exclusivas</b> — Solo para ganadores de ese torneo<br>
+            <b>⭐ XP extra</b> — Para subir de nivel más rápido<br>
+            <b>👑 Badge Campeón</b> — Visible en tu perfil permanentemente<br>
+            <b>📊 Posición en leaderboard</b> — Puntos para el ranking global
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-q="crear torneo propio" data-cat="torneos">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Puedo crear mi propio torneo?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Los torneos privados para clanes estarán disponibles próximamente. Por ahora, los torneos oficiales son organizados por el equipo de VEX OS. Si tienes un clan y quieres organizar un torneo, contáctanos en el Discord oficial.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="reglas torneo formato" data-cat="torneos">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Cuáles son las reglas generales de los torneos?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Los torneos siguen las <a href="rules.html">reglas de comunidad</a> de VEX OS. Cada torneo tiene reglas específicas (formato, rango mínimo, horario) descritas en su página. El uso de hacks o trampas resulta en descalificación inmediata y baneo permanente.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section" data-cat="tecnico">
+      <div class="faq-section-title">⚙️ Técnico</div>
+
+      <div class="faq-item" data-q="datos guardados donde localStorage" data-cat="tecnico">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Dónde se guardan mis datos?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Todos tus datos se guardan en el <code>localStorage</code> de tu navegador — en tu dispositivo, no en servidores externos. Esto significa que si cambias de dispositivo o limpias el caché, perderás tus datos. Consulta nuestra <a href="privacy.html">Política de Privacidad</a> para más detalles.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="sincronizar dispositivos móvil" data-cat="tecnico">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿Puedo usar VEX OS en varios dispositivos?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a"><p>Por ahora no hay sincronización entre dispositivos (los datos son locales). Puedes abrir VEX OS en cualquier dispositivo pero tendrás que crear el perfil de nuevo. La sincronización en la nube está planificada para una versión futura.</p></div>
+      </div>
+
+      <div class="faq-item" data-q="navegadores compatibles funciona" data-cat="tecnico">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">¿En qué navegadores funciona VEX OS?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>VEX OS funciona en todos los navegadores modernos:</p>
+          <div class="highlight-box">
+            <b>✓ Chrome</b> 90+ (recomendado)<br>
+            <b>✓ Firefox</b> 88+<br>
+            <b>✓ Safari</b> 14+ (iOS y macOS)<br>
+            <b>✓ Edge</b> 90+<br>
+            <b>✗</b> Internet Explorer no es compatible
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item" data-q="no carga error problema" data-cat="tecnico">
+        <div class="faq-q" onclick="toggle(this)">
+          <div class="faq-q-text">VEX OS no carga correctamente, ¿qué hago?</div>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>Prueba estos pasos en orden:</p>
+          <div class="highlight-box">
+            1. <b>Recarga</b> la página (Ctrl+R / Cmd+R)<br>
+            2. <b>Limpia el caché</b> del navegador<br>
+            3. Prueba en <b>modo incógnito</b><br>
+            4. Prueba en <b>otro navegador</b><br>
+            5. Si el problema persiste, repórtalo en el <b>Discord oficial</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /faqContainer -->
+
+  <!-- Contact card -->
+  <div class="contact-card">
+    <div style="font-size:36px;margin-bottom:10px;">💬</div>
+    <h2>¿No encontraste tu respuesta?</h2>
+    <p>Nuestro equipo está activo en el servidor de Discord.<br>Respuesta promedio en menos de 24 horas.</p>
+    <div class="contact-btns">
+      <a href="https://discord.gg/yXXG7jmvq4" target="_blank" class="btn btn-primary">Ir al Discord →</a>
+      <a href="rules.html" class="btn btn-outline">Ver reglas</a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div style="max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div style="font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);">VEX OS</div>
+    <div style="display:flex;gap:20px;">
+      <a href="privacy.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Privacidad</a>
+      <a href="rules.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Reglas</a>
+      <a href="index.html" style="font-size:12px;color:var(--muted);text-decoration:none;">Inicio</a>
+    </div>
+    <div style="font-size:11px;color:var(--muted2);">© 2025 VEX OS</div>
+  </div>
+</footer>
+
+<script>/* ============================================================
+   VEX OS — auth.js
+   Login, register, session helpers
+============================================================ */
+
+function hashSimple(s){
+  let h=0;
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xFFFFFF;
+  return h.toString(16);
+}
+
+function getAccounts(){ return JSON.parse(localStorage.getItem('vex_accounts')||'{}'); }
+function setAccounts(a){ localStorage.setItem('vex_accounts',JSON.stringify(a)); }
+function getSession(){ return JSON.parse(localStorage.getItem('vex_user')||'null'); }
+function setSession(u){ localStorage.setItem('vex_user',JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem('vex_user'); }
+function isLoggedIn(){ return !!getSession(); }
+
+function doLogin(user, pass, errEl){
+  user=user.trim().toLowerCase();
+  if(!user||!pass){ showErr(errEl,'Completa todos los campos'); return false; }
+  const accounts=getAccounts();
+  if(!accounts[user]){ showErr(errEl,'Usuario no encontrado'); return false; }
+  if(accounts[user].passHash!==hashSimple(pass)){ showErr(errEl,'Contraseña incorrecta'); return false; }
+  setSession(accounts[user]);
+  // Sync vex_profile with account data
+  localStorage.setItem('vex_profile', JSON.stringify(accounts[user].profile||{}));
+  return true;
+}
+
+function doRegister(data, errEl){
+  const {username, pass, age, country, lang, schedule}=data;
+  const key=username.trim().toLowerCase();
+  if(!key||!pass||!age||!country){ showErr(errEl,'Completa todos los campos'); return false; }
+  if(isNaN(age)||parseInt(age)<14){ showErr(errEl,'Debes tener al menos 14 años'); return false; }
+  if(pass.length<6){ showErr(errEl,'Contraseña mínimo 6 caracteres'); return false; }
+  if(!/^[a-zA-Z0-9_]+$/.test(key)){ showErr(errEl,'Username: solo letras, números y _'); return false; }
+  const accounts=getAccounts();
+  if(accounts[key]){ showErr(errEl,'Username ya en uso'); return false; }
+
+  const profile={
+    name: username, username: key, bio:'', country, lang, schedule,
+    status:'online', avatar:'', games:[], music:[], socials:{}, setupDone:false
+  };
+  const account={ username:key, passHash:hashSimple(pass), age:parseInt(age), createdAt:Date.now(), profile };
+  accounts[key]=account;
+  setAccounts(accounts);
+  setSession(account);
+  localStorage.setItem('vex_profile', JSON.stringify(profile));
+  return true;
+}
+
+function showErr(el, msg){
+  if(!el) return;
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4000);
+}
+
+function requireAuth(redirect='login.html'){
+  if(!isLoggedIn()) window.location.href=redirect;
+}
+
+function logout(){
+  clearSession();
+  window.location.href='index.html';
+}
+
+// Spawn background particles (shared utility)
+function spawnParticles(containerId='ambient', count=20){
+  const amb=document.getElementById(containerId);
+  if(!amb) return;
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div'); s.className='speck';
+    s.style.left=Math.random()*100+'vw';
+    s.style.setProperty('--dx',(Math.random()*60-30)+'px');
+    s.style.animationDuration=(12+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    amb.appendChild(s);
+  }
+}
+</script>
+<script>
+spawnParticles('ambient', 10);
+
+if(isLoggedIn()){
+  document.getElementById('navLogin').textContent = 'Dashboard';
+  document.getElementById('navLogin').href = 'dashboard.html';
+  document.getElementById('navReg').style.display = 'none';
+}
+
+/* Accordion */
+function toggle(btn){
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+/* Category filter */
+function filterCat(cat, el){
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.faq-section').forEach(s => {
+    s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+  });
+  document.querySelectorAll('.faq-item').forEach(i => {
+    i.style.display = (cat === 'all' || i.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+/* Search filter */
+function filterFAQ(){
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if(!q){ filterCat('all', document.querySelector('.cat-card')); return; }
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const text = (item.dataset.q || '') + ' ' + item.textContent;
+    item.style.display = text.toLowerCase().includes(q) ? '' : 'none';
+  });
+  document.querySelectorAll('.faq-section').forEach(s => {
+    const hasVisible = [...s.querySelectorAll('.faq-item')].some(i => i.style.display !== 'none');
+    s.style.display = hasVisible ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

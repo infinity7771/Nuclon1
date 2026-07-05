@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEX OS · Notificaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>/* ============================================================
+   VEX OS — shared.css
+   Estilos compartidos para páginas fuera del iPhone
+============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;}
+*::-webkit-scrollbar{display:none;}
+
+:root{
+  --bg:#090909;
+  --s1:#111116;
+  --s2:#18181f;
+  --line:#24242b;
+  --line2:#2e2e38;
+  --ink:#F2F0EB;
+  --muted:#6a6a72;
+  --muted2:#3e3e47;
+  --accent:#D9D4C7;
+  --green:#3d9970;
+  --yellow:#c8a84b;
+  --red:#c0392b;
+  --nav-h:64px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Geist',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ---- Partículas ---- */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.speck{
+  position:absolute;bottom:-4px;width:1.5px;height:1.5px;border-radius:50%;
+  background:rgba(242,240,235,0.15);animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:1;}90%{opacity:1;}
+  100%{transform:translateY(-110vh) translateX(var(--dx,20px));opacity:0;}
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(9,9,9,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;z-index:100;
+}
+.nav-logo{
+  font-size:18px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink);text-decoration:none;
+}
+.nav-links{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-links a{
+  font-size:12px;font-weight:500;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;transition:.2s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--ink);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+.nav-cta{
+  display:flex;align-items:center;gap:10px;
+}
+.btn-nav-ghost{
+  padding:8px 18px;border:1px solid var(--line);border-radius:10px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;transition:.2s;letter-spacing:.06em;
+  background:transparent;cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-ghost:hover{border-color:var(--line2);color:var(--ink);}
+.btn-nav-solid{
+  padding:8px 18px;background:var(--accent);border:none;border-radius:10px;
+  font-size:12px;font-weight:700;color:var(--bg);
+  text-decoration:none;transition:.15s;letter-spacing:.06em;
+  cursor:pointer;font-family:'Geist',sans-serif;
+}
+.btn-nav-solid:hover{opacity:.9;}
+
+/* Mobile nav toggle */
+.nav-mobile-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  color:var(--muted);padding:4px;
+}
+@media(max-width:700px){
+  .navbar{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-mobile-toggle{display:block;}
+}
+
+/* ============================================================
+   PAGE WRAPPER
+============================================================ */
+.page{
+  padding-top:var(--nav-h);
+  min-height:100vh;
+  position:relative;z-index:1;
+}
+
+/* ============================================================
+   COMMON SECTIONS
+============================================================ */
+.section{
+  max-width:1100px;
+  margin:0 auto;
+  padding:80px 40px;
+}
+@media(max-width:700px){.section{padding:60px 20px;}}
+
+.section-label{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.section-title{
+  font-size:clamp(28px,5vw,48px);font-weight:800;
+  letter-spacing:-.02em;line-height:1.15;color:var(--ink);
+  margin-bottom:14px;
+}
+.section-sub{
+  font-size:16px;color:var(--muted);line-height:1.7;
+  max-width:560px;
+}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--line);margin:0;}
+
+/* Cards */
+.card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+}
+.card:hover{border-color:var(--line2);}
+
+/* ============================================================
+   BUTTONS (full-page)
+============================================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:12px;
+  font-size:13px;font-weight:700;letter-spacing:.08em;
+  font-family:'Geist',sans-serif;cursor:pointer;
+  text-decoration:none;transition:.15s;border:none;
+}
+.btn-primary{background:var(--accent);color:var(--bg);}
+.btn-primary:hover{opacity:.9;}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--line2);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer{
+  border-top:1px solid var(--line);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+  position:relative;z-index:1;
+}
+.footer-logo{font-size:14px;font-weight:700;letter-spacing:.1em;color:var(--ink);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:.2s;}
+.footer-links a:hover{color:var(--ink);}
+.footer-copy{font-size:10px;color:var(--muted2);letter-spacing:.06em;}
+@media(max-width:600px){.footer{padding:24px 20px;flex-direction:column;text-align:center;}}
+
+/* ============================================================
+   FORM INPUTS (login, etc)
+============================================================ */
+.form-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:20px;padding:32px;width:100%;max-width:420px;
+}
+.form-field{margin-bottom:16px;}
+.form-field label{
+  display:block;font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:7px;
+}
+.form-field input,.form-field select{
+  width:100%;background:var(--s2);border:1px solid var(--line);
+  border-radius:10px;padding:13px 16px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--line2);}
+.form-tabs{
+  display:flex;background:var(--s2);border:1px solid var(--line);
+  border-radius:12px;padding:4px;margin-bottom:24px;gap:4px;
+}
+.form-tab{
+  flex:1;padding:9px;border:none;background:transparent;
+  font-family:'Geist',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;color:var(--muted);cursor:pointer;
+  border-radius:9px;transition:.2s;
+}
+.form-tab.active{background:var(--s1);color:var(--ink);border:1px solid var(--line);}
+.form-error{
+  font-size:11px;color:var(--red);display:none;
+  padding:8px 12px;background:rgba(192,57,43,.08);
+  border:1px solid rgba(192,57,43,.25);border-radius:8px;margin-bottom:12px;
+}
+.form-error.show{display:block;}
+.form-note{
+  font-size:10px;color:var(--muted);line-height:1.6;
+  margin-top:16px;padding:12px;background:var(--s2);
+  border:1px solid var(--line);border-radius:10px;
+}
+.form-note b{color:var(--muted2);}
+
+/* ============================================================
+   DASHBOARD LAYOUT
+============================================================ */
+.app-layout{
+  display:flex;min-height:calc(100vh - var(--nav-h));
+  padding-top:var(--nav-h);
+}
+.sidebar{
+  width:220px;flex-shrink:0;
+  border-right:1px solid var(--line);
+  padding:24px 16px;
+  position:fixed;top:var(--nav-h);left:0;bottom:0;
+  overflow-y:auto;background:var(--bg);z-index:40;
+}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px;}
+.sidebar-link{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:.15s;cursor:pointer;border:none;background:none;width:100%;
+  font-family:'Geist',sans-serif;
+}
+.sidebar-link:hover{background:var(--s1);color:var(--ink);}
+.sidebar-link.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.sidebar-link svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.sidebar-link .badge-count{
+  margin-left:auto;font-size:9px;background:var(--accent);
+  color:var(--bg);border-radius:20px;padding:2px 7px;font-weight:700;
+}
+.main-content{
+  margin-left:220px;flex:1;padding:32px;
+  max-width:calc(100vw - 220px);
+}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main-content{margin-left:0;max-width:100%;padding:20px;}
+}
+
+/* ============================================================
+   PROFILE CARDS
+============================================================ */
+.profile-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;transition:.2s;cursor:pointer;
+}
+.profile-card:hover{border-color:var(--line2);transform:translateY(-2px);}
+.pc-banner{height:60px;background:linear-gradient(135deg,var(--s2),var(--line));position:relative;}
+.pc-av{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--bg);
+  position:absolute;bottom:-26px;left:16px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
+}
+.pc-av img{width:100%;height:100%;object-fit:cover;}
+.pc-body{padding:34px 16px 16px;}
+.pc-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:.04em;}
+.pc-handle{font-size:11px;color:var(--muted);margin-top:2px;}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0;}
+.pc-tag{font-size:9px;padding:3px 8px;border-radius:20px;background:var(--s2);border:1px solid var(--line);color:var(--muted);}
+.pc-games{display:flex;gap:4px;margin-top:8px;}
+.pc-game{width:28px;height:28px;border-radius:8px;background:var(--s2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pc-footer{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.pc-compat{font-size:12px;font-weight:700;color:var(--accent);}
+.pc-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.pc-dot{width:6px;height:6px;border-radius:50%;}
+.pc-dot.online{background:var(--green);}
+.pc-dot.away{background:var(--yellow);}
+.pc-dot.offline{background:var(--muted2);}
+
+/* ============================================================
+   STAT CARDS
+============================================================ */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:800px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:16px;padding:18px 20px;
+}
+.sc-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sc-value{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.sc-trend{font-size:11px;color:var(--green);margin-top:4px;}
+
+/* ============================================================
+   ACTIVITY FEED
+============================================================ */
+.activity-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.act-content{flex:1;min-width:0;}
+.act-text{font-size:13px;color:var(--ink);line-height:1.4;}
+.act-time{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+
+/* ============================================================
+   SEARCH & FILTERS
+============================================================ */
+.search-bar{
+  display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+}
+.search-input-wrap{
+  flex:1;min-width:200px;position:relative;
+}
+.search-input-wrap svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--muted);
+}
+.search-input{
+  width:100%;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px 12px 40px;
+  font-size:14px;color:var(--ink);font-family:'Geist',sans-serif;outline:none;transition:.2s;
+}
+.search-input:focus{border-color:var(--line2);}
+.filter-btn{
+  padding:11px 16px;background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;font-size:12px;color:var(--muted);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;white-space:nowrap;
+}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--ink);}
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+.sec-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.sec-header h2{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+.sec-header a{font-size:12px;color:var(--muted);text-decoration:none;transition:.2s;}
+.sec-header a:hover{color:var(--ink);}
+
+/* ============================================================
+   SETTINGS
+============================================================ */
+.settings-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-info .settings-title{font-size:13px;color:var(--ink);font-weight:500;}
+.settings-info .settings-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.toggle{
+  width:44px;height:24px;border-radius:12px;background:var(--line);
+  border:none;cursor:pointer;position:relative;transition:.2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green);}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;background:white;
+  transition:transform .2s;
+}
+.toggle.on::after{transform:translateX(20px);}
+.danger-zone{
+  background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);
+  border-radius:16px;padding:20px;margin-top:24px;
+}
+.danger-zone h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:14px;}
+.btn-danger{
+  padding:10px 20px;background:transparent;border:1px solid var(--red);
+  border-radius:10px;font-size:12px;color:var(--red);cursor:pointer;
+  font-family:'Geist',sans-serif;transition:.2s;
+}
+.btn-danger:hover{background:rgba(192,57,43,.1);}
+</style>
+<style>
+.dash-wrap{display:flex;min-height:100vh;padding-top:64px;}
+.sidebar{width:230px;flex-shrink:0;position:fixed;top:64px;left:0;bottom:0;background:var(--bg);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;z-index:40;padding:20px 12px;}
+.nav-group{margin-bottom:20px;}
+.nav-group-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:13px;color:var(--muted);text-decoration:none;transition:.15s;cursor:pointer;border:none;background:none;width:100%;font-family:'Geist',sans-serif;margin-bottom:2px;}
+.nav-item:hover{background:var(--s1);color:var(--ink);}
+.nav-item.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+.nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.nav-badge{margin-left:auto;font-size:9px;background:var(--red);color:#fff;border-radius:20px;padding:2px 7px;font-weight:700;}
+.sidebar-bottom{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);}
+.main{margin-left:230px;flex:1;padding:32px;max-width:720px;}
+@media(max-width:900px){.sidebar{display:none;}.main{margin-left:0;padding:20px;}}
+
+/* Notif filter tabs */
+.notif-tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:4px;}
+.ntab{flex:1;padding:9px;border:none;background:transparent;font-family:'Geist',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:10px;transition:.2s;letter-spacing:.04em;}
+.ntab.active{background:var(--s2);color:var(--ink);border:1px solid var(--line);}
+
+/* Notif items */
+.notif-group{margin-bottom:28px;}
+.notif-group-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+
+.notif-item{
+  display:flex;align-items:flex-start;gap:13px;
+  padding:14px 16px;border-radius:14px;margin-bottom:6px;
+  transition:.2s;cursor:pointer;position:relative;
+  border:1px solid transparent;
+}
+.notif-item:hover{background:var(--s1);border-color:var(--line);}
+.notif-item.unread{background:var(--s1);border-color:var(--line);}
+.notif-item.unread::before{
+  content:'';position:absolute;top:16px;left:6px;
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+}
+
+.notif-icon{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:var(--s2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  position:relative;
+}
+.notif-badge{
+  position:absolute;bottom:-2px;right:-2px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--s0);border:1.5px solid var(--s1);
+  display:flex;align-items:center;justify-content:center;font-size:9px;
+}
+
+.notif-content{flex:1;min-width:0;}
+.notif-text{font-size:13px;color:var(--ink);line-height:1.5;}
+.notif-text b{font-weight:600;}
+.notif-text span{color:var(--muted);}
+.notif-time{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.03em;}
+.notif-extra{
+  margin-top:8px;background:var(--s2);border:1px solid var(--line);
+  border-radius:10px;padding:8px 12px;font-size:11px;color:var(--muted);
+}
+
+.notif-actions{display:flex;gap:6px;margin-top:8px;}
+.notif-btn{
+  padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;
+  cursor:pointer;font-family:'Geist',sans-serif;transition:.15s;letter-spacing:.04em;
+}
+.notif-btn.primary{background:var(--accent);border:none;color:#090909;}
+.notif-btn.primary:hover{opacity:.9;}
+.notif-btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);}
+.notif-btn.ghost:hover{border-color:var(--line2);color:var(--ink);}
+
+.notif-empty{
+  text-align:center;padding:48px 20px;
+  font-size:13px;color:var(--muted2);
+}
+.notif-empty div{font-size:32px;margin-bottom:10px;}
+
+.mark-all{
+  font-size:11px;color:var(--muted);cursor:pointer;
+  text-decoration:none;transition:.2s;letter-spacing:.04em;
+}
+.mark-all:hover{color:var(--ink);}
+
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s1);border:1px solid var(--line);border-radius:20px;padding:9px 18px;font-size:12px;color:var(--ink);white-space:nowrap;opacity:0;transition:.3s;pointer-events:none;z-index:200;}
+</style>
+</head>
+<body>
+<div class="ambient" id="ambient"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;"><div class="nav-logo-dot"></div>VEX OS</a>
+  <div class="nav-center">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="explore.html">Explorar</a>
+    <a href="chat.html">Chat</a>
+  </div>
+  <div class="nav-right">
+    <a href="app.html" class="btn-ghost">Mi perfil</a>
+    <a href="dashboard.html" class="btn-solid">Dashboard</a>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <aside class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-label">Principal</div>
+      <a href="dashboard.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+      <a href="app.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>Mi perfil</a>
+      <a href="explore.html" class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Explorar</a>
+      <a href="notifications.html" class="nav-item active"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notificaciones<div class="nav-badge">5</div></a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Social</div>
+      <a href="app.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/><line x1="20" y1="8" x2="20" y2="14"/></svg>Amigos</a>
+      <a href="app.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Match</a>
+    </div>
+    <div class="sidebar-bottom">
+      <a href="settings.html" class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuración</a>
+      <button class="nav-item" onclick="logout()" style="color:var(--red);"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <div>
+        <h1 style="font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;">Notificaciones</h1>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;" id="unreadCount">5 sin leer</p>
+      </div>
+      <span class="mark-all" onclick="markAllRead()">Marcar todas como leídas</span>
+    </div>
+
+    <div class="notif-tabs">
+      <button class="ntab active" onclick="filterNotif('all',this)">Todas</button>
+      <button class="ntab" onclick="filterNotif('social',this)">Social</button>
+      <button class="ntab" onclick="filterNotif('gaming',this)">Gaming</button>
+      <button class="ntab" onclick="filterNotif('system',this)">Sistema</button>
+    </div>
+
+    <div id="notifContainer"></div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>/* ============================================================
+   VEX OS — auth.js
+   Login, register, session helpers
+============================================================ */
+
+function hashSimple(s){
+  let h=0;
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xFFFFFF;
+  return h.toString(16);
+}
+
+function getAccounts(){ return JSON.parse(localStorage.getItem('vex_accounts')||'{}'); }
+function setAccounts(a){ localStorage.setItem('vex_accounts',JSON.stringify(a)); }
+function getSession(){ return JSON.parse(localStorage.getItem('vex_user')||'null'); }
+function setSession(u){ localStorage.setItem('vex_user',JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem('vex_user'); }
+function isLoggedIn(){ return !!getSession(); }
+
+function doLogin(user, pass, errEl){
+  user=user.trim().toLowerCase();
+  if(!user||!pass){ showErr(errEl,'Completa todos los campos'); return false; }
+  const accounts=getAccounts();
+  if(!accounts[user]){ showErr(errEl,'Usuario no encontrado'); return false; }
+  if(accounts[user].passHash!==hashSimple(pass)){ showErr(errEl,'Contraseña incorrecta'); return false; }
+  setSession(accounts[user]);
+  // Sync vex_profile with account data
+  localStorage.setItem('vex_profile', JSON.stringify(accounts[user].profile||{}));
+  return true;
+}
+
+function doRegister(data, errEl){
+  const {username, pass, age, country, lang, schedule}=data;
+  const key=username.trim().toLowerCase();
+  if(!key||!pass||!age||!country){ showErr(errEl,'Completa todos los campos'); return false; }
+  if(isNaN(age)||parseInt(age)<14){ showErr(errEl,'Debes tener al menos 14 años'); return false; }
+  if(pass.length<6){ showErr(errEl,'Contraseña mínimo 6 caracteres'); return false; }
+  if(!/^[a-zA-Z0-9_]+$/.test(key)){ showErr(errEl,'Username: solo letras, números y _'); return false; }
+  const accounts=getAccounts();
+  if(accounts[key]){ showErr(errEl,'Username ya en uso'); return false; }
+
+  const profile={
+    name: username, username: key, bio:'', country, lang, schedule,
+    status:'online', avatar:'', games:[], music:[], socials:{}, setupDone:false
+  };
+  const account={ username:key, passHash:hashSimple(pass), age:parseInt(age), createdAt:Date.now(), profile };
+  accounts[key]=account;
+  setAccounts(accounts);
+  setSession(account);
+  localStorage.setItem('vex_profile', JSON.stringify(profile));
+  return true;
+}
+
+function showErr(el, msg){
+  if(!el) return;
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4000);
+}
+
+function requireAuth(redirect='login.html'){
+  if(!isLoggedIn()) window.location.href=redirect;
+}
+
+function logout(){
+  clearSession();
+  window.location.href='index.html';
+}
+
+// Spawn background particles (shared utility)
+function spawnParticles(containerId='ambient', count=20){
+  const amb=document.getElementById(containerId);
+  if(!amb) return;
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div'); s.className='speck';
+    s.style.left=Math.random()*100+'vw';
+    s.style.setProperty('--dx',(Math.random()*60-30)+'px');
+    s.style.animationDuration=(12+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    amb.appendChild(s);
+  }
+}
+</script>
+<script>
+requireAuth();
+spawnParticles('ambient', 10);
+
+const NOTIFS = [
+  { id:1, type:'social', unread:true, icon:'🎯', badge:'🤝', category:'today',
+    text:'<b>@nx_kira</b> aceptó tu solicitud de amistad.',
+    time:'hace 12 min',
+    actions:[{label:'Ver perfil',style:'primary'},{label:'Ignorar',style:'ghost'}] },
+  { id:2, type:'social', unread:true, icon:'🔫', badge:'👥', category:'today',
+    text:'<b>@dark_fragment</b> te envió una solicitud de amistad.',
+    extra:'🇲🇽 México · Platino · Valorant · Fortnite',
+    time:'hace 34 min',
+    actions:[{label:'Aceptar',style:'primary'},{label:'Rechazar',style:'ghost'}] },
+  { id:3, type:'gaming', unread:true, icon:'🏆', badge:'⭐', category:'today',
+    text:'Nuevo logro desbloqueado: <b>Ace en partida clasificatoria</b> — Valorant.',
+    extra:'RARO · Solo el 2.4% de jugadores tiene este logro',
+    time:'hace 2 h' },
+  { id:4, type:'gaming', unread:true, icon:'⚡', badge:'🔥', category:'today',
+    text:'Tu racha en <b>Roblox</b> lleva <b>21 días</b> activa. ¡No la rompas!',
+    time:'hace 3 h' },
+  { id:5, type:'social', unread:true, icon:'🎬', badge:'❤️', category:'today',
+    text:'Tu clip <b>"Ace en Split"</b> alcanzó <b>1,200 vistas</b>.',
+    time:'hace 5 h' },
+  { id:6, type:'social', unread:false, icon:'🤝', badge:'💬', category:'yesterday',
+    text:'<b>@zeph_gg</b> comentó en tu clip: <span>"Ese ace fue increíble bro 🔥"</span>',
+    time:'ayer, 11:42 PM' },
+  { id:7, type:'gaming', unread:false, icon:'💎', badge:'🏅', category:'yesterday',
+    text:'Alcanzaste el <b>Rango Diamante</b> en Valorant. Nueva insignia añadida a tu perfil.',
+    time:'ayer, 8:20 PM' },
+  { id:8, type:'social', unread:false, icon:'👥', badge:'🎮', category:'yesterday',
+    text:'<b>@mxrk</b> y <b>@rex_plays</b> se unieron a VEX OS. ¿Los conoces?',
+    extra:'2 nuevos jugadores en tu región',
+    time:'ayer, 3:15 PM',
+    actions:[{label:'Ver perfiles',style:'ghost'}] },
+  { id:9, type:'system', unread:false, icon:'🚀', badge:'📢', category:'week',
+    text:'<b>VEX OS v1.2</b> — Nueva función: sistema de clips mejorado con categorías por juego.',
+    time:'hace 3 días' },
+  { id:10, type:'system', unread:false, icon:'🛡', badge:'🔒', category:'week',
+    text:'Tu perfil fue <b>visto 48 veces</b> esta semana. Activa Premium para ver quién lo visitó.',
+    time:'hace 5 días' },
+  { id:11, type:'gaming', unread:false, icon:'🎯', badge:'📊', category:'week',
+    text:'Resumen semanal: jugaste <b>18 horas</b> en <b>3 juegos</b>. Tu mejor día fue el miércoles.',
+    time:'hace 6 días' },
+];
+
+let currentFilter = 'all';
+
+function renderNotifs(){
+  const container = document.getElementById('notifContainer');
+  const filtered = currentFilter === 'all' ? NOTIFS : NOTIFS.filter(n => n.type === currentFilter);
+
+  const groups = { today:'Hoy', yesterday:'Ayer', week:'Esta semana' };
+  let html = '';
+
+  for(const [key, label] of Object.entries(groups)){
+    const items = filtered.filter(n => n.category === key);
+    if(!items.length) continue;
+    html += `<div class="notif-group">
+      <div class="notif-group-label">${label}</div>`;
+    for(const n of items){
+      html += `<div class="notif-item ${n.unread?'unread':''}" id="notif-${n.id}" onclick="readNotif(${n.id})">
+        <div class="notif-icon">${n.icon}<div class="notif-badge">${n.badge}</div></div>
+        <div class="notif-content">
+          <div class="notif-text">${n.text}</div>
+          ${n.extra ? `<div class="notif-extra">${n.extra}</div>` : ''}
+          ${n.actions ? `<div class="notif-actions">
+            ${n.actions.map(a=>`<button class="notif-btn ${a.style}" onclick="event.stopPropagation();handleAction('${a.label}',${n.id})">${a.label}</button>`).join('')}
+          </div>` : ''}
+          <div class="notif-time">${n.time}</div>
+        </div>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  if(!filtered.length){
+    html = `<div class="notif-empty"><div>🔔</div>Sin notificaciones en esta categoría.</div>`;
+  }
+
+  container.innerHTML = html;
+  updateCount();
+}
+
+function updateCount(){
+  const unread = NOTIFS.filter(n => n.unread).length;
+  document.getElementById('unreadCount').textContent = unread > 0 ? `${unread} sin leer` : 'Todo al día ✓';
+}
+
+function readNotif(id){
+  const n = NOTIFS.find(x => x.id === id);
+  if(n) n.unread = false;
+  const el = document.getElementById('notif-'+id);
+  if(el) el.classList.remove('unread');
+  updateCount();
+}
+
+function markAllRead(){
+  NOTIFS.forEach(n => n.unread = false);
+  renderNotifs();
+  showToast('✓ Todas marcadas como leídas');
+}
+
+function filterNotif(f, el){
+  currentFilter = f;
+  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderNotifs();
+}
+
+function handleAction(label, id){
+  readNotif(id);
+  const msgs = { 'Aceptar':'✓ Solicitud aceptada', 'Rechazar':'Solicitud rechazada', 'Ver perfil':'Abriendo perfil...', 'Ver perfiles':'Abriendo explorar...', 'Ignorar':'Notificación ignorada' };
+  showToast(msgs[label] || '✓ Acción completada');
+}
+
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.opacity = '1'; el.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(10px)'; }, 2400);
+}
+
+renderNotifs();
+</script>
+</body>
+</html>
